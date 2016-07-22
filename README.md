@@ -20,7 +20,7 @@ gem 'poke-api',
     tag: '0.0.1'
 ```
 
-Or, alternatively install using ``gem install poke-api``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.1.gem`` 
 
 **NOTE** - This gem relies on header files for Ruby to install the ``google-protobuf`` gem.
   * Windows: You will need the Ruby DevKit applied to your Ruby, please see [RubyInstaller](http://rubyinstaller.org/downloads/)
