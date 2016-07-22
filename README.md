@@ -16,7 +16,7 @@ Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and 
 You can use bundler and refer directly to this repository
 ```
 gem 'poke-api',
-    git: "git@github.com:nabeelamjad/poke-api.git",
+    git: "https://github.com/nabeelamjad/poke-api.git",
     tag: '0.0.1'
 ```
 
