@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package RpcEnvelope;
+
+import "rpc_enum.proto";
+
+message Request {
+  RpcEnum.RpcDirection direction = 1;
+  int64 rpc_id = 3;
+  repeated Requests requests = 4;
+  Unknown6 unknown6 = 6;
+  fixed64 latitude = 7;
+  fixed64 longitude = 8;
+  fixed64 altitude = 9;
+  AuthInfo auth = 10;
+  AuthTicket auth_ticket = 11;
+  int64 unknown12 = 12;
+
+  message Requests {
+    RpcEnum.RequestMethod type = 1;
+    bytes parameters = 2;
+  }
+
+  message AuthInfo {
+    string provider = 1;
+    JWT token = 2;
+
+    message JWT {
+      string contents = 1;
+      int32 unknown13  = 2;
+    }
+  }
+
+  message Unknown3 {
+    string unknown4 = 1;
+  }
+
+  message Unknown6 {
+    int32 unknown1 = 1;
+    Unknown2 unknown2 = 2;
+
+    message Unknown2 {
+      bytes unknown1 = 1;
+    }
+  }
+}
+
+message Response {
+  RpcEnum.RpcDirection direction = 1;
+  int64 unknown2 = 2;
+  string api_url = 3;
+  Unknown6 unknown6 = 6;
+  AuthTicket auth_ticket = 7;
+  repeated bytes responses = 100;
+
+  message Unknown6 {
+    int32 unknown1 = 1;
+    Unknown2 unknown2 = 2;
+
+    message Unknown2 {
+      bytes unknown1 = 1;
+    }
+  }
+
+  message Unknown7 {
+    bytes unknown71 = 1;
+    int64 unknown72 = 2;
+    bytes unknown73 = 3;
+  }
+}
+
+message AuthTicket {
+  bytes start = 1;
+  uint64 expire_timestamp_ms = 2;
+  bytes end = 3;
+}
