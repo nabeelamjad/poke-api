@@ -30,7 +30,7 @@ Or, alternatively you can download the repository and run ``gem build poke-api.g
      * SuSe based: ``sudo zypper install ruby-devel``
 
 ## Example Usage
-> Running provided ``example.rb`` with your own credentials
+Running provided ``example.rb`` with your own credentials
 ```ruby
 [2016-07-22T00:06:08+00:00]: INFO  > Poke::API::Client         --: [+] Logging in user: <your_user>
 [2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Client         --: [+] Login Successful
@@ -99,7 +99,6 @@ client.login('user', 'password', 'ptc')
 client.store_location('New York')
 
 # Add RPC calls
-client.get_player
 client.get_inventory
 client.download_settings(hash: '4a2e9bc330dae60e7b74fc85b98868ab4700802e')
 
@@ -123,7 +122,7 @@ p call.response
 ```
 
 # Logger settings
-If you wish to change the log level so before instantiating the client by using ``Poke::API::Logging.log_level = :INFO`` where ``:INFO`` is the desired level, possible values are: ``:DEBUG``, ``:INFO``, ``:WARN``, ``:FATAL`` and ``UNKNOWN``
+If you wish to change the log level you can do so before instantiating the client by using ``Poke::API::Logging.log_level = :INFO`` where ``:INFO`` is the desired level, possible values are: ``:DEBUG``, ``:INFO``, ``:WARN``, ``:FATAL`` and ``UNKNOWN``
 
 The log formatter format can also be customised, a default one is provided. You can provide a ``proc`` to ``Poke::API::Logging.log_level`` to change it. More information can be found at [`Class#Logger`](http://ruby-doc.org/stdlib-2.3.1/libdoc/logger/rdoc/Logger.html)
 
