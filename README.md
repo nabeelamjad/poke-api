@@ -124,7 +124,7 @@ p call.response
 # Logger settings
 If you wish to change the log level you can do so before instantiating the client by using ``Poke::API::Logging.log_level = :INFO`` where ``:INFO`` is the desired level, possible values are: ``:DEBUG``, ``:INFO``, ``:WARN``, ``:FATAL`` and ``UNKNOWN``
 
-The log formatter format can also be customised, a default one is provided. You can provide a ``proc`` to ``Poke::API::Logging.log_level`` to change it. More information can be found at [`Class#Logger`](http://ruby-doc.org/stdlib-2.3.1/libdoc/logger/rdoc/Logger.html)
+The log formatter format can also be customised, a default one is provided. You can provide a ``proc`` to ``Poke::API::Logging.formatter`` to change it. More information can be found at [`Class#Logger`](http://ruby-doc.org/stdlib-2.3.1/libdoc/logger/rdoc/Logger.html)
 
 Example:
 ```ruby
@@ -142,10 +142,12 @@ client.store_location('London')
 #=> My custom logger - [+] Lat/Long: 51.5073509, -0.1277583
 ```
 
-# Caveats
+# Caveats & Workarounds
 Google's S2 Geometry library has not been ported over to Ruby yet, you will need to find a way to obtain ``cell_ids`` to scan for (either through some library or through your own custom function). It is possible to do this to some degree using Geocoder, however it is not as extensive as S2-Geometry. More information can be found in [this article](http://blog.christianperone.com/2015/08/googles-s2-geometry-on-the-sphere-cells-and-hilbert-curve/). I welcome any pull request/suggestion on how to tackle this so I can add a ``Poke::API::Helper`` method to generate ``cell_ids``
 
-Google Authentication is currently not imlemented as I have not had the time yet, I will look when possible to implement this (PRs welcome!). Unfortunately no Ruby gem exists for GPS OAuth.
+A workaround can be found on [this comment](https://github.com/nabeelamjad/poke-api/issues/2#issuecomment-234742928) on how to obtain cell_ids for a given location and optionally enter a radius (default to 10 to your given location).
+
+Google Authentication is currently not implemented as I have not had the time yet, I will look when possible to implement this (PRs welcome!). Unfortunately no Ruby gem exists for GPS OAuth.
 
 # Contribution
 Any contributions are most welcome, I don't have much time to spend on this project so I appreciate everything.
