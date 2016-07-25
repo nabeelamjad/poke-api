@@ -19,5 +19,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'httpclient', '2.8.0'
   spec.add_runtime_dependency 'geocoder', '1.3.7'
   spec.add_runtime_dependency 'google-protobuf', '~> 3.0.0.alpha'
-  spec.add_runtime_dependency 'gpsoauth-rb', '0.1.0'
+  spec.add_runtime_dependency 'gpsoauth-rb', '0.1.1'
 end

@@ -5,7 +5,7 @@ Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and 
   * Use a throwaway account if possible.
 
 ## Supports
-  * PTC Auth (Google not supported yet)
+  * PTC & Google Authentication supported (use full e-mail address for Google)
   * Parses geolocation using Geocoder (parses addresses, postcodes, ip addresses, lat/long, etc) 
   * Ability to chain requests and receive response in a single call
   * Logger available, you can also specify your own log formatter and/or log level
@@ -17,10 +17,10 @@ You can use bundler and refer directly to this repository
 ```
 gem 'poke-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.0.1'
+    tag: '0.0.2'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.1.gem`` 
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.2.gem`` 
 
 **NOTE** - This gem relies on header files for Ruby to install the ``google-protobuf`` gem.
   * Windows: You will need the Ruby DevKit applied to your Ruby, please see [RubyInstaller](http://rubyinstaller.org/downloads/)
@@ -145,9 +145,7 @@ client.store_location('London')
 # Caveats & Workarounds
 Google's S2 Geometry library has not been ported over to Ruby yet, you will need to find a way to obtain ``cell_ids`` to scan for (either through some library or through your own custom function). It is possible to do this to some degree using Geocoder, however it is not as extensive as S2-Geometry. More information can be found in [this article](http://blog.christianperone.com/2015/08/googles-s2-geometry-on-the-sphere-cells-and-hilbert-curve/). I welcome any pull request/suggestion on how to tackle this so I can add a ``Poke::API::Helper`` method to generate ``cell_ids``
 
-A workaround can be found on [this comment](https://github.com/nabeelamjad/poke-api/issues/2#issuecomment-234742928) on how to obtain cell_ids for a given location and optionally enter a radius (default to 10 to your given location).
-
-Google Authentication is currently not implemented as I have not had the time yet, I will look when possible to implement this (PRs welcome!). Unfortunately no Ruby gem exists for GPS OAuth.
+A workaround can be found on [this comment](https://github.com/nabeelamjad/poke-api/issues/2#issuecomment-234742928) on how to obtain cell_ids for a given location and optionally enter a radius (defaults to 10 to your given location).
 
 # Contribution
 Any contributions are most welcome, I don't have much time to spend on this project so I appreciate everything.

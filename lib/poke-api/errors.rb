@@ -31,6 +31,12 @@ module Poke
         end
       end
 
+      class GoogleAuthenticationFailure < StandardError
+        def initialize(token, response)
+          super("Unable to login to Google, could not find => #{token} in #{response}")
+        end
+      end
+
       class LoginFailure < StandardError
         def initialize(provider, error)
           super("Unable to login to #{provider} => [#{error} @ #{error.backtrace.first}]")
