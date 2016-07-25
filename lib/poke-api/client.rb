@@ -14,7 +14,7 @@ module Poke
       end
 
       def login(username, password, provider)
-        raise Errors::InvalidProvider.new(provider) unless provider.upcase! == 'PTC'
+        raise Errors::InvalidProvider.new(provider) unless ['PTC', 'GOOGLE'].include?(provider.upcase!)
         logger.info "[+] Logging in user: #{username}"
 
         begin
@@ -24,7 +24,7 @@ module Poke
           raise Errors::LoginFailure.new(provider, ex)
         end
 
-        logger.info '[+] Login Successful'
+        logger.info "[+] Login with #{provider} Successful"
         fetch_endpoint
       end
 
