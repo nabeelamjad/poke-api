@@ -1,32 +1,32 @@
 # Poke API - A Ruby API gem for Pokémon GO.
-Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and also allows for any automatic parsing of a request/response defined under [`rpc_enum.rb`](lib/poke-api/protos/rpc_enum.rb).
+Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and also allows for any automatic parsing of a requests and responses.
 
   * Unofficial, please use at your own RISK.
   * Use a throwaway account if possible.
 
 ## Supports
   * PTC & Google Authentication supported (use full e-mail address for Google)
-  * Parses geolocation using Geocoder (parses addresses, postcodes, ip addresses, lat/long, etc) 
+  * Parses geolocation using Geocoder (parses addresses, postcodes, ip addresses, lat/long, etc)
   * Ability to chain requests and receive response in a single call
   * Logger available, you can also specify your own log formatter and/or log level
   * Protobuf files are modified slightly to the new Proto syntax 3 (Ruby is incompatible with 2)
-  * A lot of RPC calls, they are listed under [`rpc_enum.rb`](lib/poke-api/protos/rpc_enum.rb) (requires testing, but appears to be in working order)
+  * A lot of RPC calls, they are listed under [`lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb`](lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb) (requires testing, but appears to be in working order)
 
 ## Installation
 You can use bundler and refer directly to this repository
 ```
 gem 'poke-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.0.2'
+    tag: '0.0.3'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.2.gem`` 
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.2.gem``
 
 **NOTE** - This gem relies on header files for Ruby to install the ``google-protobuf`` gem.
   * Windows: You will need the Ruby DevKit applied to your Ruby, please see [RubyInstaller](http://rubyinstaller.org/downloads/)
   * Linux:
-     * Debian based: ``sudo apt-get install ruby-dev`` 
-     * RPM based: ``sudo yum install ruby-devel`` 
+     * Debian based: ``sudo apt-get install ruby-dev``
+     * RPM based: ``sudo yum install ruby-devel``
      * SuSe based: ``sudo zypper install ruby-devel``
 
 ## Example Usage
@@ -86,39 +86,52 @@ Running provided ``example.rb`` with your own credentials
 ```
 
 # RPC call requests and responses
-An RPC request can be made on its own or with multiple calls, it also provides the ability to specify arguments.
+An RPC request can be made on its own or with multiple calls, it also provides the ability to specify arguments. You can find all the supported requests under [`lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb`](lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb). Please note that you will need to check if any of these requests require arguments, these can be found under the folder [`lib/poke-api/POGOProtos/Networking/Requests/Messages`](lib/poke-api/POGOProtos/Networking/Requests/Messages) using the same naming convention.
 
+**Let's assume we want to delete a few great balls from our inventory**  
+If you open [**`RequestType.rb`**](lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb) we can see that there's an entry for `:RECYCLE_INVENTORY_ITEM`. We now know that our call is ``recycle_inventory_item``, next we have to find out if there're any arguments to this call. We can find any arguments inside the [**`Messages`**](lib/poke-api/POGOProtos/Networking/Requests/Messages) folder, we see a file named [**`RecycleInventoryItemMessage.rb`**](lib/poke-api/POGOProtos/Networking/Requests/Messages/RecycleInventoryItemMessage.rb) which contains two arguments: ``item_id`` and ``count``. Furthermore we can see that ``item_id`` directly links to [**`POGOProtos.Inventory.Item.ItemId`**](lib/poke-api/POGOProtos/Inventory/Item/ItemId.rb), this is a file you can open as well with the item ids specified inside. In here we can see the Item ID for a great ball is 2.
+
+Our example request could be as follows:
 ```ruby
 require 'poke-api'
 
 # Instantiate our client
 client = Poke::API::Client.new
 
-# PTC only available currently as authentication provider
-client.login('user', 'password', 'ptc')
+# Both PTC/Google available as authentication provider
 client.store_location('New York')
+client.login('username@gmail.com', 'password', 'google')
 
 # Add RPC calls
-client.get_inventory
-client.download_settings(hash: '4a2e9bc330dae60e7b74fc85b98868ab4700802e')
+client.recycle_inventory_item(item_id: :ITEM_POKEBALL, count: 2)
 
 # You can inspect the client before performing the call
-p client
-=> #<Poke::API::Client @auth=#<Poke::API::Auth::PTC:0x000000044a61f0> @reqs=[2, {5=>{:hash=>"4a2e9bc330dae60e7b74fc85b98868ab4700802e"}}] @lat=4632445832507001935 @lng=13817143035003499136 @alt=0>
+puts client.inspect
+=> #<Poke::API::Client @auth=#<Poke::API::Auth::GOOGLE> @reqs=[{:RECYCLE_INVENTORY_ITEM=>{:item_id=>2, :count=>1}}] @lat=4630926632231391130 @lng=13858280158942612615 @alt=0>
 
 # Perform your RPC call
 call = client.call
 
 # A <Poke::API::Response> object is returned and decorated with your request and response in a Hash format
-p call.request
-=> [2, {5=>{:hash=>"4a2e9bc330dae60e7b74fc85b98868ab4700802e"}}],
+# Request
+puts call.request.inspect
+[
+  {
+    :RECYCLE_INVENTORY_ITEM => {
+      :item_id=>2,
+      :count=>2
+    }
+  }
+]
 
-p call.response
-=> {
-     :GET_PLAYER => { ... },
-     :DOWNLOAD_SETTINGS => { ... },
-     :api_url => 'pgorelease.nianticlabs.com/plfe/...'
-   }
+# Response
+puts call.response.inspect
+{
+  :RECYCLE_INVENTORY_ITEM = >{
+    :result=>:SUCCESS, 
+    :new_count=>14
+  }
+}
 ```
 
 # Logger settings
@@ -152,4 +165,4 @@ Any contributions are most welcome, I don't have much time to spend on this proj
 
 # Credits
 [tejado](https://github.com/tejado/pgoapi) - Pretty much everything as this repository is a direct 'conversion' to the best of my ability  
-[AeonLucid](https://github.com/AeonLucid/POGOProtos) - Protobufs (current ones are slightly out of date, I will look into updating these soon)
+[AeonLucid](https://github.com/AeonLucid/POGOProtos) - Protobufs

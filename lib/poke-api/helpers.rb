@@ -8,10 +8,6 @@ module Poke
           Geocoder.search(pos)
         end
 
-        def float_to_int(floats)
-          floats.pack('D*').unpack('Q*')
-        end
-
         def camel_case_lower(sym)
           sym.to_s.split('_').collect(&:capitalize).join
         end

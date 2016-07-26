@@ -1,3 +1,4 @@
+# Load Poke-API related classes
 require 'poke-api/logging'
 require 'poke-api/client'
 require 'poke-api/helpers'
@@ -7,6 +8,7 @@ require 'poke-api/errors'
 require 'poke-api/version'
 require 'poke-api/auth/ptc'
 require 'poke-api/auth/google'
-require 'poke-api/protos/rpc_enum'
-require 'poke-api/protos/rpc_envelope'
-require 'poke-api/protos/rpc_sub'
+
+# Load Google Generated POGOProtos
+require 'poke-api/POGOProtos/Networking/Envelopes/RequestEnvelope'
+require 'poke-api/POGOProtos/Networking/Envelopes/ResponseEnvelope'

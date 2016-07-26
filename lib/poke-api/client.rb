@@ -48,8 +48,8 @@ module Poke
         pos = Poke::API::Helpers.get_position(loc).first
         logger.info "[+] Given location: #{pos.address}"
 
-        @lat, @lng = Poke::API::Helpers.float_to_int([pos.latitude, pos.longitude])
         logger.info "[+] Lat/Long: #{pos.latitude}, #{pos.longitude}"
+        @lat, @lng = pos.latitude, pos.longitude
       end
 
       def inspect
@@ -70,17 +70,12 @@ module Poke
         logger.debug "[+] Setting endpoint to #{@endpoint}"
       end
 
-      def method_missing(method_name, *arguments)
-        name = method_name.upcase
-
+      def method_missing(method, *args)
         begin
-          if arguments.empty?
-            @reqs << RpcEnum::RequestMethod.const_get(name)
-          else
-            @reqs << { RpcEnum::RequestMethod.const_get(name) => arguments.first }
-          end
+          POGOProtos::Networking::Requests::RequestType.const_get(method.upcase)
+          @reqs << (args.empty? ?  method.to_sym.upcase : { method.to_sym.upcase => args.first })
         rescue NameError
-          raise Errors::InvalidRPC.new(name.to_s)
+          super
         end
       end
     end

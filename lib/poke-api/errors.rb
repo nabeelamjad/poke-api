@@ -7,12 +7,6 @@ module Poke
         end
       end
 
-      class InvalidRPC < StandardError
-        def initialize(rpc)
-          super("Invalid RPC enum #{rpc}.")
-        end
-      end
-
       class LoginRequired < StandardError
         def initialize
           super('Not logged in currently, please login.')
