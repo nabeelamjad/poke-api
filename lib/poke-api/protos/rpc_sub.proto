@@ -108,7 +108,7 @@ message Pokemon {
 }
 
 message Item {
-  RpcEnum.ItemType item = 1;
+  RpcEnum.ItemId item = 1;
   int32 count = 2;
   bool unseen = 3;
 }
