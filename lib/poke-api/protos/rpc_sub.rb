@@ -96,7 +96,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :from_fort, :int32, 31
   end
   add_message "RpcSub.Item" do
-    optional :item, :enum, 1, "RpcEnum.ItemType"
+    optional :item, :enum, 1, "RpcEnum.ItemId"
     optional :count, :int32, 2
     optional :unseen, :bool, 3
   end
