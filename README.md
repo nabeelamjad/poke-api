@@ -20,7 +20,7 @@ gem 'poke-api',
     tag: '0.0.3'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.2.gem``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.3.gem``
 
 **NOTE** - This gem relies on header files for Ruby to install the ``google-protobuf`` gem.
   * Windows: You will need the Ruby DevKit applied to your Ruby, please see [RubyInstaller](http://rubyinstaller.org/downloads/)
@@ -107,7 +107,7 @@ client.recycle_inventory_item(item_id: :ITEM_POKEBALL, count: 2)
 
 # You can inspect the client before performing the call
 puts client.inspect
-=> #<Poke::API::Client @auth=#<Poke::API::Auth::GOOGLE> @reqs=[{:RECYCLE_INVENTORY_ITEM=>{:item_id=>2, :count=>1}}] @lat=4630926632231391130 @lng=13858280158942612615 @alt=0>
+=> #<Poke::API::Client @auth=#<Poke::API::Auth::GOOGLE> @reqs=[{:RECYCLE_INVENTORY_ITEM=>{:item_id=>2, :count=>2}}] @lat=4630926632231391130 @lng=13858280158942612615 @alt=0>
 
 # Perform your RPC call
 call = client.call
