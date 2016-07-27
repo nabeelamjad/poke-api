@@ -17,7 +17,7 @@ You can use bundler and refer directly to this repository
 ```
 gem 'poke-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.0.3'
+    tag: '0.0.4'
 ```
 
 Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.3.gem``
@@ -103,7 +103,7 @@ client.store_location('New York')
 client.login('username@gmail.com', 'password', 'google')
 
 # Add RPC calls
-client.recycle_inventory_item(item_id: :ITEM_POKEBALL, count: 2)
+client.recycle_inventory_item(item_id: 2, count: 2)
 
 # You can inspect the client before performing the call
 puts client.inspect
@@ -130,7 +130,10 @@ puts call.response.inspect
   :RECYCLE_INVENTORY_ITEM = >{
     :result=>:SUCCESS, 
     :new_count=>14
-  }
+  },
+  :status_code => 1,
+  :api_url => "",
+  :error => ""
 }
 ```
 
@@ -165,4 +168,5 @@ Any contributions are most welcome, I don't have much time to spend on this proj
 
 # Credits
 [tejado](https://github.com/tejado/pgoapi) - Pretty much everything as this repository is a direct 'conversion' to the best of my ability  
-[AeonLucid](https://github.com/AeonLucid/POGOProtos) - Protobufs
+[AeonLucid](https://github.com/AeonLucid/POGOProtos) - Protobufs  
+[xssc](https://github.com/xssc/gpsoauth) - GPSOauth (Google Login)

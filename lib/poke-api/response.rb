@@ -11,7 +11,6 @@ module Poke
 
       def decode_response
         logger.info '[+] Decoding Main RPC responses'
-
         @response = POGOProtos::Networking::Envelopes::ResponseEnvelope.decode(@response)
 
         logger.debug "[+] Decoding RPC response \r\n#{@response.inspect}"
@@ -24,9 +23,10 @@ module Poke
           parse_rpc_fields(decoded_resp)
         end
 
-        decoded_resp[:api_url] = @response.api_url unless @response.api_url.empty?
-        @response = decoded_resp
+        decoded_resp.merge!(status_code: @response.status_code,
+                            api_url: @response.api_url, error: @response.error)
 
+        @response = decoded_resp
         logger.debug "[+] Returned RPC response \r\n#{@response}"
       end
 
