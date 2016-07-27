@@ -6,12 +6,13 @@ module Poke
 
       def initialize(response, request)
         @response = response
-        @request = request
+        @request  = request
       end
 
       def decode_response
         logger.info '[+] Decoding Main RPC responses'
-        @response = RpcEnvelope::Response.decode(@response)
+
+        @response = POGOProtos::Networking::Envelopes::ResponseEnvelope.decode(@response)
 
         logger.debug "[+] Decoding RPC response \r\n#{@response.inspect}"
         logger.info '[+] Decoding Sub RPC responses'
@@ -19,7 +20,7 @@ module Poke
         decoded_resp = parse_rpc_fields(decode_sub_responses)
 
         loop do
-          break unless decoded_resp.to_s.include?('RpcSub::')
+          break unless decoded_resp.to_s.include?('POGOProtos::')
           parse_rpc_fields(decoded_resp)
         end
 
@@ -32,11 +33,11 @@ module Poke
       private
 
       def decode_sub_responses
-        @response.responses.zip(@request).each_with_object({}) do |(resp, req), memo|
+        @response.returns.zip(@request).each_with_object({}) do |(resp, req), memo|
           proto_name, entry_name = fetch_proto_response_metadata(req)
 
           resp = begin
-            RpcSub.const_get(proto_name).decode(resp).to_hash
+            POGOProtos::Networking::Responses.const_get(proto_name).decode(resp).to_hash
           rescue StandardError
             logger.error "[+] Protobuf definition mismatch/not found for #{entry_name}"
             'Mismatched/Invalid Protobuf Definition'
@@ -47,16 +48,17 @@ module Poke
       end
 
       def fetch_proto_response_metadata(req)
-          entry_id   = req.is_a?(Fixnum) ? req : req.keys.first
-          entry_name = RpcEnum::RequestMethod.lookup(entry_id)
+          entry_name   = req.is_a?(Symbol) ? req : req.keys.first
           proto_name = Poke::API::Helpers.camel_case_lower(entry_name) + 'Response'
+
+          require "poke-api/POGOProtos/Networking/Responses/#{proto_name}"
 
           [ proto_name, entry_name ]
       end
 
       def parse_rpc_fields(responses)
         responses.map! do |x|
-          x = x.to_hash if x.class.name =~ /RpcSub/
+          x = x.to_hash if x.class.name =~ /POGOProtos/
           x
         end if responses.is_a?(Array)
 
@@ -64,7 +66,7 @@ module Poke
           parse_rpc_fields(v) if [Hash, Array].include?(v.class)
           parse_rpc_fields(k) if [Hash, Array].include?(k.class)
 
-          responses[k] = v.to_hash if v.class.name =~ /RpcSub/
+          responses[k] = v.to_hash if v.class.name =~ /POGOProtos/
         end
       end
     end

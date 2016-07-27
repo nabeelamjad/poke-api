@@ -1,6 +1,7 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'poke-api/version'
+
+require_relative 'lib/poke-api/version'
 
 Gem::Specification.new do |spec|
   spec.name = 'poke-api'
@@ -13,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.authors = ['Nabeel Amjad']
   spec.licenses = ['MIT']
 
-  spec.files = Dir.glob('lib/**/*')
+  spec.files = Dir.glob('lib/**/*') + Dir.glob('protos/**/*') 
   spec.homepage = 'https://github.com/nabeelamjad/poke-api'
 
   spec.add_runtime_dependency 'httpclient', '2.8.0'
