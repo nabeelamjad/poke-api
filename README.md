@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/poke-go-api.svg)](https://badge.fury.io/rb/poke-go-api)
 # Poke API - A Ruby API gem for Pokémon GO.
 Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and also allows for any automatic parsing of a requests and responses.
 

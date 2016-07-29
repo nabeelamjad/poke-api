@@ -1,0 +1,4 @@
+exclude_paths:
+- "lib/poke-api/POGOProtos/"
+- "lib/poke-api/POGOProtosSource/"
+- "example.rb"
