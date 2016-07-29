@@ -22,6 +22,8 @@ gem 'poke-api',
 
 Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.0.4.gem``
 
+The gem is also available by using ``gem install poke-go-api`` (poke-api was taken as a name already).
+
 **NOTE** - This gem relies on header files for Ruby to install the ``google-protobuf`` gem.
   * Windows: You will need the Ruby DevKit applied to your Ruby, please see [RubyInstaller](http://rubyinstaller.org/downloads/)
   * Linux:
