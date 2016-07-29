@@ -1,4 +1,16 @@
-exclude_paths:
-- "lib/poke-api/POGOProtos/"
-- "lib/poke-api/POGOProtosSource/"
-- "example.rb"
+---
+engines:
+  radon:
+    enabled: true
+  rubocop:
+    enabled: true
+ratings:
+  paths:
+  - "**.inc"
+  - "**.js"
+  - "**.jsx"
+  - "**.module"
+  - "**.php"
+  - "**.py"
+  - "**.rb"
+exclude_paths: ['']
