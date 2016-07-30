@@ -1,6 +1,10 @@
 Changelog
 ------------------
 
+0.0.6 (31-07-2016)
+------------------
+* **Fix** - Merged [PR](https://github.com/nabeelamjad/poke-api/pull/19) to fix upcase! and add additional error handling for Google
+
 0.0.5 (30-07-2016)
 ------------------
 * **Fix** - An issue with upcase! was resolved as described by [this PR](https://github.com/nabeelamjad/poke-api/pull/18)
