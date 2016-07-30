@@ -1,6 +1,10 @@
 Changelog
 ------------------
 
+0.0.5 (30-07-2016)
+------------------
+* **Fix** - An issue with upcase! was resolved as described by [this PR](https://github.com/nabeelamjad/poke-api/pull/18)
+
 0.0.4 (27-07-2016)
 ------------------
 * **Fix** - GPSOAuth has been updated so that older versions of Ruby do not break when using Google login
