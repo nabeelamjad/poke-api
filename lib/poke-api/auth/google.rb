@@ -39,8 +39,12 @@ module Poke
         def perform_request(method)
           response = yield
 
-          unless response['Token'] || response['Auth']
-            raise Errors::GoogleAuthenticationFailure.new(method, response)
+          if response['Error'] == 'NeedsBrowser'
+            raise Errors::GoogleTwoFactorAuthenticationFailure.new(response)
+          else
+            unless response['Token'] || response['Auth']
+              raise Errors::GoogleAuthenticationFailure.new(method, response)
+            end
           end
 
           response
