@@ -52,6 +52,11 @@ module Poke
         logger.info "[+] Lat/Long: #{pos.latitude}, #{pos.longitude}"
         @lat, @lng = pos.latitude, pos.longitude
       end
+      
+      def store_lat_lng(lat, lng)
+        logger.info "[+] Lat/Long: #{lat}, #{lng}"
+        @lat, @lng = lat, lng
+      end
 
       def inspect
         "#<#{self.class.name} @auth=#{@auth} @reqs=#{@reqs} " \
