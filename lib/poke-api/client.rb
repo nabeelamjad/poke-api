@@ -15,7 +15,7 @@ module Poke
 
       def login(username, password, provider)
         provider = provider.upcase
-        raise Errors::InvalidProvider.new(provider) unless ['PTC', 'GOOGLE'].include?(provider)
+        raise Errors::InvalidProvider, provider unless %w(PTC GOOGLE).include?(provider)
         logger.info "[+] Logging in user: #{username}"
 
         begin
@@ -30,13 +30,13 @@ module Poke
       end
 
       def call
-        raise Errors::LoginRequired.new unless @auth
+        raise Errors::LoginRequired unless @auth
         req = RequestBuilder.new(@auth, [@lat, @lng, @alt], @endpoint)
 
         begin
           resp = req.request(@reqs)
         rescue StandardError => ex
-          raise Errors::UnknownProtoFault.new(ex)
+          raise Errors::UnknownProtoFault, ex
         ensure
           @reqs = []
           logger.info '[+] Cleaning up RPC requests'
@@ -50,12 +50,14 @@ module Poke
         logger.info "[+] Given location: #{pos.address}"
 
         logger.info "[+] Lat/Long: #{pos.latitude}, #{pos.longitude}"
-        @lat, @lng = pos.latitude, pos.longitude
+        @lat = pos.latitude
+        @lng = pos.longitude
       end
-      
+
       def store_lat_lng(lat, lng)
         logger.info "[+] Lat/Long: #{lat}, #{lng}"
-        @lat, @lng = lat, lng
+        @lat = lat
+        @lng = lng
       end
 
       def inspect
@@ -72,17 +74,22 @@ module Poke
         check_awarded_badges
         download_settings(hash: '4a2e9bc330dae60e7b74fc85b98868ab4700802e')
 
-        @endpoint = "https://#{call.response[:api_url]}/rpc"
+        resp = call.response
+
+        if !resp[:api_url] && resp[:api_url].empty?
+          logger.debug '[+] Login failed, please try again'
+          return
+        end
+
+        @endpoint = "https://#{resp[:api_url]}/rpc"
         logger.debug "[+] Setting endpoint to #{@endpoint}"
       end
 
       def method_missing(method, *args)
-        begin
-          POGOProtos::Networking::Requests::RequestType.const_get(method.upcase)
-          @reqs << (args.empty? ?  method.to_sym.upcase : { method.to_sym.upcase => args.first })
-        rescue NameError
-          super
-        end
+        POGOProtos::Networking::Requests::RequestType.const_get(method.upcase)
+        @reqs << (args.empty? ? method.to_sym.upcase : { method.to_sym.upcase => args.first })
+      rescue NameError
+        super
       end
     end
   end

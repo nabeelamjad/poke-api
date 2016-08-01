@@ -1,6 +1,11 @@
 Changelog
 ------------------
 
+0.0.7 (01-08-2016)
+------------------
+* **Fix** - Fix an issue whereby the @endpoint address was overwritten to an empty string on a failed login attempt
+* **Feature** - A new function ``store_lat_lng`` is provided to store a latitude and longitude directly (without requiring Geocoder to look up)
+
 0.0.6 (31-07-2016)
 ------------------
 * **Fix** - Merged [PR](https://github.com/nabeelamjad/poke-api/pull/19) to fix upcase! and add additional error handling for Google
