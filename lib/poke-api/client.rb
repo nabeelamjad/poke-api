@@ -76,7 +76,7 @@ module Poke
 
         resp = call.response
 
-        if !resp[:api_url] || resp[:api_url].empty?
+        if resp[:api_url].empty?
           logger.debug '[+] Login failed, please try again'
           return
         end
