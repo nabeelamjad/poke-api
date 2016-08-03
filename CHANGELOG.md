@@ -1,6 +1,10 @@
 Changelog
 ------------------
 
+0.0.8 (03-08-2016)
+------------------
+* **Fix** - Ensure the endpoint is constantly updated if a new one is provided
+
 0.0.7 (01-08-2016)
 ------------------
 * **Fix** - Fix an issue whereby the @endpoint address was overwritten to an empty string on a failed login attempt

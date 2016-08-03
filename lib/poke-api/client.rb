@@ -2,7 +2,7 @@ module Poke
   module API
     class Client
       include Logging
-      attr_accessor :lat, :lng, :alt
+      attr_accessor :lat, :lng, :alt, :endpoint
 
       def initialize
         @auth     = nil
@@ -34,7 +34,7 @@ module Poke
         req = RequestBuilder.new(@auth, [@lat, @lng, @alt], @endpoint)
 
         begin
-          resp = req.request(@reqs)
+          resp = req.request(@reqs, self)
         rescue StandardError => ex
           raise Errors::UnknownProtoFault, ex
         ensure
@@ -74,15 +74,7 @@ module Poke
         check_awarded_badges
         download_settings(hash: '4a2e9bc330dae60e7b74fc85b98868ab4700802e')
 
-        resp = call.response
-
-        if resp[:api_url].empty?
-          logger.debug '[+] Login failed, please try again'
-          return
-        end
-
-        @endpoint = "https://#{resp[:api_url]}/rpc"
-        logger.debug "[+] Setting endpoint to #{@endpoint}"
+        call
       end
 
       def method_missing(method, *args)

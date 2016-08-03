@@ -42,6 +42,12 @@ module Poke
           super("Unable to login to #{provider} => [#{error} @ #{error.backtrace.first}]")
         end
       end
+
+      class InvalidEndpoint < StandardError
+        def initialize
+          super("Unable to fetch endpoint, please try to login again.")
+        end
+      end
     end
   end
 end

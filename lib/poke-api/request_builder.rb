@@ -11,7 +11,7 @@ module Poke
         @client       = HTTPClient.new(agent_name: 'PokeAPI/0.0.1')
       end
 
-      def request(reqs)
+      def request(reqs, client)
         logger.debug '[+] Creating new request'
         request_proto = build_main_request(reqs)
 
@@ -19,7 +19,7 @@ module Poke
         resp = execute_rpc_request(request_proto)
 
         resp = Response.new(resp.body, reqs)
-        resp.decode_response
+        resp.decode_response(client)
 
         resp
       end
@@ -29,8 +29,8 @@ module Poke
       def build_main_request(sub_reqs)
         request_envelope = POGOProtos::Networking::Envelopes::RequestEnvelope
         req = request_envelope.new(
-          status_code: 2, 
-          request_id: 814_580_613_288_820_746_0, 
+          status_code: 2,
+          request_id: 814_580_613_288_820_746_0,
           unknown12: 989
         )
         req.latitude, req.longitude, req.altitude = @position
@@ -51,7 +51,7 @@ module Poke
           elsif sub_req.is_a?(Hash)
             append_hash_request(req, sub_req)
           else
-            raise Errors::InvalidRequestEntry.new(sub_req)
+            raise Errors::InvalidRequestEntry, sub_req
           end
         end
       end
