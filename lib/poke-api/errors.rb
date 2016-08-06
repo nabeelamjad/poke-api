@@ -32,7 +32,7 @@ module Poke
       end
 
       class GoogleTwoFactorAuthenticationFailure < StandardError
-        def initialize(response)
+        def initialize
           super("Two-factor authentication not supported. Create an app-specific password to log in.")
         end
       end
@@ -46,6 +46,12 @@ module Poke
       class InvalidEndpoint < StandardError
         def initialize
           super("Unable to fetch endpoint, please try to login again.")
+        end
+      end
+
+      class InvalidLevel < StandardError
+        def initialize(level)
+          super("Level #{level} is invalid, must be between 0 and 30.")
         end
       end
     end

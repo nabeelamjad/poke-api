@@ -7,11 +7,11 @@ module Poke
         include Logging
         attr_reader :access_token, :provider
 
-        GOOGLE_LOGIN_ANDROID_ID = '9774d56d682e549c'
+        GOOGLE_LOGIN_ANDROID_ID = '9774d56d682e549c'.freeze
         GOOGLE_LOGIN_SERVICE    = 'audience:server:client_id:848232511240-7so421jotr' \
-                                  '2609rmqakceuu1luuq0ptb.apps.googleusercontent.com'
-        GOOGLE_LOGIN_APP        = 'com.nianticlabs.pokemongo'
-        GOOGLE_LOGIN_CLIENT_SIG = '321187995bc7cdc2b5fc91b11a96e2baa8602c62'
+                                  '2609rmqakceuu1luuq0ptb.apps.googleusercontent.com'.freeze
+        GOOGLE_LOGIN_APP        = 'com.nianticlabs.pokemongo'.freeze
+        GOOGLE_LOGIN_CLIENT_SIG = '321187995bc7cdc2b5fc91b11a96e2baa8602c62'.freeze
 
         def initialize(username, password)
           @username = username
@@ -40,7 +40,7 @@ module Poke
           response = yield
 
           if response['Error'] == 'NeedsBrowser'
-            raise Errors::GoogleTwoFactorAuthenticationFailure.new(response)
+            raise Errors::GoogleTwoFactorAuthenticationFailure
           else
             unless response['Token'] || response['Auth']
               raise Errors::GoogleAuthenticationFailure.new(method, response)

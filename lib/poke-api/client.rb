@@ -56,8 +56,7 @@ module Poke
 
       def store_lat_lng(lat, lng)
         logger.info "[+] Lat/Long: #{lat}, #{lng}"
-        @lat = lat
-        @lng = lng
+        @lat, @lng = lat, lng
       end
 
       def inspect
