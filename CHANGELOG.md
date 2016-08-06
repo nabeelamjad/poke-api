@@ -1,6 +1,10 @@
 Changelog
 ------------------
 
+0.1.0 (06-08-2016)
+------------------
+* **Feature** - Classes have been added to generate S2 Cell Ids in native Ruby (no external libraries), this covers the base S2 features and may not include advanced methods yet.
+
 0.0.8 (03-08-2016)
 ------------------
 * **Fix** - Ensure the endpoint is constantly updated if a new one is provided
