@@ -16,6 +16,9 @@ module Poke
         @response = POGOProtos::Networking::Envelopes::ResponseEnvelope.decode(@response)
         logger.debug "[+] Decoded RPC response \r\n#{@response.inspect}"
 
+        store_ticket(client)
+        store_endpoint(client)
+
         logger.info '[+] Decoding Sub RPC responses'
         decoded_resp = parse_rpc_fields(decode_sub_responses)
 
@@ -24,7 +27,6 @@ module Poke
           parse_rpc_fields(decoded_resp)
         end
 
-        store_endpoint(client)
         decoded_resp.merge!(status_code: @response.status_code,
                             api_url: @response.api_url, error: @response.error)
 
@@ -33,6 +35,17 @@ module Poke
       end
 
       private
+
+      def store_ticket(client)
+        return unless @response.auth_ticket
+
+        auth = @response.auth_ticket.to_hash
+
+        if client.ticket.is_new_ticket?(auth[:expire_timestamp_ms])
+          logger.debug "[+] Storing Auth Ticket\r\n#{auth}"
+          client.ticket.set_ticket(auth)
+        end
+      end
 
       def store_endpoint(client)
         logger.debug "[+] Current Endpoint #{client.endpoint}"
@@ -43,7 +56,7 @@ module Poke
 
         return if @response.api_url.empty?
 
-        logger.debug "[+] Setting Endpoint to #{@response.api_url}"
+        logger.debug "[+] Setting Endpoint to https://#{@response.api_url}/rpc"
         client.endpoint = "https://#{@response.api_url}/rpc"
       end
 

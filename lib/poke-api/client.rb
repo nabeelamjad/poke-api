@@ -2,7 +2,7 @@ module Poke
   module API
     class Client
       include Logging
-      attr_accessor :lat, :lng, :alt, :endpoint
+      attr_accessor :lat, :lng, :alt, :endpoint, :ticket, :sig_path
 
       def initialize
         @auth     = nil
@@ -10,7 +10,9 @@ module Poke
         @reqs     = []
         @lat      = 0
         @lng      = 0
-        @alt      = 0
+        @alt      = 8
+        @ticket   = Auth::Ticket.new
+        @sig_path = nil
       end
 
       def login(username, password, provider)
@@ -25,12 +27,14 @@ module Poke
           raise Errors::LoginFailure.new(provider, ex)
         end
 
+        get_hatched_eggs
+        call
         logger.info "[+] Login with #{provider} Successful"
-        fetch_endpoint
       end
 
       def call
         raise Errors::LoginRequired unless @auth
+        raise Errors::NoRequests if @reqs.empty?
         req = RequestBuilder.new(@auth, [@lat, @lng, @alt], @endpoint)
 
         begin
@@ -43,6 +47,15 @@ module Poke
         end
 
         resp
+      end
+
+      def activate_signature(file_path)
+        if File.exist?(path)
+          logger.info "[+] File #{file_path} has been set for signature generation"
+          @sig_path = path
+        else
+          raise Errors::InvalidSignatureFilePath, file_path
+        end
       end
 
       def store_location(loc)
@@ -65,16 +78,6 @@ module Poke
       end
 
       private
-
-      def fetch_endpoint
-        get_player
-        get_hatched_eggs
-        get_inventory
-        check_awarded_badges
-        download_settings(hash: '4a2e9bc330dae60e7b74fc85b98868ab4700802e')
-
-        call
-      end
 
       def method_missing(method, *args)
         POGOProtos::Networking::Requests::RequestType.const_get(method.upcase)

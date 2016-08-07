@@ -1,8 +1,9 @@
 Changelog
 ------------------
 
-0.1.0 (06-08-2016)
+0.1.0 (07-08-2016)
 ------------------
+* **Fix** - Include the new signature generation, requires your own encrypt file (dll/so)
 * **Feature** - Classes have been added to generate S2 Cell Ids in native Ruby (no external libraries), this covers the base S2 features and may not include advanced methods yet.
 
 0.0.8 (03-08-2016)

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = 'An API wrapper for Pokemon GO'
   spec.version = Poke::API::VERSION
 
-  spec.date = '2016-08-06'
+  spec.date = '2016-08-07'
   spec.authors = ['Nabeel Amjad']
   spec.licenses = ['MIT']
 
@@ -21,4 +21,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'geocoder', '1.3.7'
   spec.add_runtime_dependency 'google-protobuf', '~> 3.0.0.alpha'
   spec.add_runtime_dependency 'gpsoauth-rb', '0.1.2'
+  spec.add_runtime_dependency 'ruby-xxHash', '0.4.0.1'
+  spec.add_runtime_dependency 'ffi', '1.9.14'
 end

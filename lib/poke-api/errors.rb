@@ -32,7 +32,7 @@ module Poke
       end
 
       class GoogleTwoFactorAuthenticationFailure < StandardError
-        def initialize
+        def initialize(response)
           super("Two-factor authentication not supported. Create an app-specific password to log in.")
         end
       end
@@ -46,6 +46,18 @@ module Poke
       class InvalidEndpoint < StandardError
         def initialize
           super("Unable to fetch endpoint, please try to login again.")
+        end
+      end
+
+      class NoRequests < StandardError
+        def initialize
+          super("Can not call without any requests set")
+        end
+      end
+
+      class InvalidSignatureFilePath < StandardError
+        def initialize(file_path)
+          super("Could not find file #{file_path} for signature generation")
         end
       end
 
