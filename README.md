@@ -6,6 +6,7 @@ Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and 
   * Use a throwaway account if possible.
 
 ## Supports
+  * Supports new SIGNATURE generation!
   * S2 Geometry cells!
   * PTC & Google Authentication supported (use full e-mail address for Google)
   * Parses geolocation using Geocoder (parses addresses, postcodes, ip addresses, lat/long, etc)
@@ -18,10 +19,10 @@ You can use bundler and refer directly to this repository
 ```
 gem 'poke-go-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.1.0'
+    tag: '0.1.1'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.0.gem``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.1.gem``
 
 The gem is also available by using ``gem install poke-go-api`` (poke-api was taken as a name already).
 

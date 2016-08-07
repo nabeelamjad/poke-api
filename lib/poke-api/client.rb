@@ -2,17 +2,19 @@ module Poke
   module API
     class Client
       include Logging
-      attr_accessor :lat, :lng, :alt, :endpoint, :ticket, :sig_path
+      attr_accessor :lat, :lng, :alt, :endpoint, :ticket, :sig_loaded
+      attr_reader :sig_path
 
       def initialize
-        @auth     = nil
-        @endpoint = 'https://pgorelease.nianticlabs.com/plfe/rpc'
-        @reqs     = []
-        @lat      = 0
-        @lng      = 0
-        @alt      = 8
-        @ticket   = Auth::Ticket.new
-        @sig_path = nil
+        @auth       = nil
+        @endpoint   = 'https://pgorelease.nianticlabs.com/plfe/rpc'
+        @reqs       = []
+        @lat        = 0
+        @lng        = 0
+        @alt        = 8
+        @ticket     = Auth::Ticket.new
+        @sig_path   = nil
+        @sig_loaded = false
       end
 
       def login(username, password, provider)
@@ -50,9 +52,9 @@ module Poke
       end
 
       def activate_signature(file_path)
-        if File.exist?(path)
+        if File.exist?(file_path)
           logger.info "[+] File #{file_path} has been set for signature generation"
-          @sig_path = path
+          @sig_path = file_path
         else
           raise Errors::InvalidSignatureFilePath, file_path
         end

@@ -1,10 +1,8 @@
-require 'ffi'
 require 'securerandom'
 
 module Poke
   module API
     class RequestBuilder
-      extend FFI::Library
       include Logging
 
       def initialize(auth, pos, endpoint)
@@ -14,7 +12,6 @@ module Poke
         @position     = pos
         @client       = HTTPClient.new(agent_name: 'PokeAPI/0.0.1')
         @start_time   = (Time.now.to_f * 1000).to_i
-        @ffi_enabled  = false
       end
 
       def request(reqs, client)
@@ -58,8 +55,8 @@ module Poke
             expire_timestamp_ms: client.ticket.expire
           )
 
-          load_library(client.sig_path) if client.sig_path && !@ffi_enabled
-          set_signature(req, request_envelope) if @ffi_enabled
+          Signature.load_signature(client) if client.sig_path
+          set_signature(req, request_envelope) if client.sig_loaded
         else
           logger.info '[+] Using Provider token'
           token = request_envelope::AuthInfo::JWT.new(contents: @access_token, unknown2: 59)
@@ -68,7 +65,7 @@ module Poke
       end
 
       def set_signature(req, _request_envelope)
-        signature = Signature.new(
+        signature = ::Signature.new(
           location_hash1: Helpers.generate_location_one(req.auth_ticket.to_proto, @position),
           location_hash2: Helpers.generate_location_two(@position),
           unk22: SecureRandom.random_bytes(32),
@@ -80,45 +77,16 @@ module Poke
           signature.request_hash << Helpers.generate_request(req.auth_ticket.to_proto, r.to_proto)
         end
 
-        unknown6 = POGOProtos::Networking::Envelopes::Unknown6
+        unk6 = POGOProtos::Networking::Envelopes::Unknown6
 
-        req.unknown6 = unknown6.new(
+        logger.info '[+] Generating Signature'
+
+        req.unknown6 = unk6.new(
           unknown1: 6,
-          unknown2: unknown6::Unknown2.new(unknown1: generate_signature(signature.to_proto))
+          unknown2: unk6::Unknown2.new(unknown1: Signature.generate_signature(signature.to_proto))
         )
 
         logger.info '[+] Setting Signature'
-      end
-
-      def generate_signature(signature)
-        attempts = 5
-
-        begin
-          logger.info '[+] Generating Signature'
-          output_size = FFI::MemoryPointer.new(:size_t)
-
-          iv = SecureRandom.random_bytes(32)
-          RequestBuilder.encrypt(signature, signature.length, iv, 32, nil, output_size)
-
-          output = FFI::MemoryPointer.new(output_size.read_int)
-          RequestBuilder.encrypt(signature, signature.length, iv, 32, output, output_size)
-        rescue StandardError => ex
-          raise ex if (attempts -= 1) == 0
-          retry
-        end
-
-        output.read_string
-      end
-
-      def load_library(path)
-        RequestBuilder.ffi_lib(path)
-        RequestBuilder.attach_function(
-          :encrypt,
-          [:string, :size_t, :string, :size_t, :pointer, :pointer],
-          :int
-        )
-
-        @ffi_enabled = true
       end
 
       def build_sub_request(req, sub_reqs)

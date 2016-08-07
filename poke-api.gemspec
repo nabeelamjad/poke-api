@@ -22,5 +22,4 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'google-protobuf', '~> 3.0.0.alpha'
   spec.add_runtime_dependency 'gpsoauth-rb', '0.1.2'
   spec.add_runtime_dependency 'ruby-xxHash', '0.4.0.1'
-  spec.add_runtime_dependency 'ffi', '1.9.14'
 end

@@ -1,6 +1,11 @@
 Changelog
 ------------------
 
+0.1.1 (08-08-2016)
+------------------
+* **Fix** - Fixed an issue whereby path was incorrectly referenced as a variable
+* **Change** - FFI is no longer required, built-in Ruby's Fiddle is used instead (and appears more reliable)
+
 0.1.0 (07-08-2016)
 ------------------
 * **Fix** - Include the new signature generation, requires your own encrypt file (dll/so)
@@ -17,7 +22,7 @@ Changelog
 
 0.0.6 (31-07-2016)
 ------------------
-* **Fix** - Merged [PR](https://github.com/nabeelamjad/poke-api/pull/19) to fix upcase! and add additional error handling for Google
+* **Fix** - Merged [PR](https://github.com/nabeelamjad/poke-api/pull/19) to fix upcase! and added additional error handling for Google
 
 0.0.5 (30-07-2016)
 ------------------
