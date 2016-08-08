@@ -1,3 +1,6 @@
+require "fiddle"
+require "fiddle/import"
+
 module Poke
   module API
     module Signature
