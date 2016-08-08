@@ -2,6 +2,7 @@ module Poke
   module API
     module Auth
       class Ticket
+        include Logging
         attr_reader :start, :ends, :expire
 
         def initialize
@@ -28,7 +29,6 @@ module Poke
 
         def get_ticket
           return false unless check_ticket
-
           true
         end
 
@@ -36,13 +36,16 @@ module Poke
 
         def check_ticket
           return false unless has_ticket?
+          now = Helpers.fetch_time
 
-          now_ms = (Time.now.to_f * 1000).to_i
-          return true if now_ms < (@expire - 10000)
+          if now < (@expire - 10000)
+            duration = format('%02d:%02d:%02d', *Helpers.format_time_diff(now, @expire))
+            logger.info "[+] Auth ticket is valid for #{duration}"
+            return true
+          end
 
-          @expire = nil
-          @start  = nil
-          @ends   = nil
+          @expire, @start, @ends = nil
+          logger.info '[+] Removed expired auth ticket'
           false
         end
       end

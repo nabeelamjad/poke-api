@@ -1,23 +1,6 @@
 require 'poke-api'
 require 'pp'
 
-# Helper method to get cell ids, pass in your
-# coordinates and an optional radius (default 10)
-def get_cells(lat, lng, radius = 10)
-  s2_point = Poke::API::Geometry::S2LatLon.new(lat, lng).to_point
-  s2_cell  = Poke::API::Geometry::S2CellId.from_point(s2_point).parent(15)
-
-  next_cell = s2_cell.next
-  prev_cell = s2_cell.prev
-
-  radius.times.reduce([s2_cell.id]) do |acc, el|
-    acc += [next_cell.id, prev_cell.id]
-    next_cell = next_cell.next
-    prev_cell = prev_cell.prev
-    acc
-  end.sort
-end
-
 # Instantiate the client
 client = Poke::API::Client.new
 
@@ -30,7 +13,7 @@ client.login('username', 'password', 'ptc')
 client.activate_signature('lib/poke-api/encrypt64bit.dll')
 
 # Get cells
-cell_ids = get_cells(client.lat, client.lng)
+cell_ids = Poke::API::Helpers.get_cells(client.lat, client.lng)
 
 # Construct map objects call
 client.get_map_objects(

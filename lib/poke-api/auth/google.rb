@@ -5,7 +5,7 @@ module Poke
     module Auth
       class GOOGLE
         include Logging
-        attr_reader :access_token, :provider
+        attr_reader :access_token, :provider, :expiry
 
         GOOGLE_LOGIN_ANDROID_ID = '9774d56d682e549c'.freeze
         GOOGLE_LOGIN_SERVICE    = 'audience:server:client_id:848232511240-7so421jotr' \
@@ -17,6 +17,7 @@ module Poke
           @username = username
           @password = password
           @provider = 'google'
+          @expiry   = 0
         end
 
         def connect
@@ -31,6 +32,7 @@ module Poke
                                         GOOGLE_LOGIN_SERVICE, GOOGLE_LOGIN_APP, GOOGLE_LOGIN_CLIENT_SIG)
           end
 
+          @expiry = auth_request['Expiry'].to_i
           @access_token = auth_request['Auth']
         end
 

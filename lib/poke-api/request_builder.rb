@@ -4,6 +4,7 @@ module Poke
   module API
     class RequestBuilder
       include Logging
+      attr_reader :position, :start_time
 
       def initialize(auth, pos, endpoint)
         @access_token = auth.access_token
@@ -11,20 +12,20 @@ module Poke
         @endpoint     = endpoint
         @position     = pos
         @client       = HTTPClient.new(agent_name: 'PokeAPI/0.0.1')
-        @start_time   = (Time.now.to_f * 1000).to_i
+        @start_time   = Helpers.fetch_time
       end
 
       def request(reqs, client)
         logger.debug '[+] Creating new request'
         request_proto = build_main_request(reqs, client)
+
         logger.debug "[+] Generated RPC protobuf encoded request \r\n#{request_proto.inspect}"
-
         logger.info '[+] Executing RPC request'
+
         resp = execute_rpc_request(request_proto)
-
         resp = Response.new(resp.body, reqs)
-        resp.decode_response(client)
 
+        resp.decode(client)
         resp
       end
 
@@ -48,45 +49,22 @@ module Poke
 
       def set_authentication(req, client, request_envelope)
         if client.ticket.get_ticket
-          logger.info '[+] Using Auth ticket'
-
-          req.auth_ticket = POGOProtos::Networking::Envelopes::AuthTicket.new(
-            start: client.ticket.start, end: client.ticket.ends,
-            expire_timestamp_ms: client.ticket.expire
-          )
-
-          Signature.load_signature(client) if client.sig_path
-          set_signature(req, request_envelope) if client.sig_loaded
+          use_auth_ticket(req, client)
         else
-          logger.info '[+] Using Provider token'
+          logger.info '[+] Using provider access token'
           token = request_envelope::AuthInfo::JWT.new(contents: @access_token, unknown2: 59)
           req.auth_info = request_envelope::AuthInfo.new(provider: @provider, token: token)
         end
       end
 
-      def set_signature(req, _request_envelope)
-        signature = ::Signature.new(
-          location_hash1: Helpers.generate_location_one(req.auth_ticket.to_proto, @position),
-          location_hash2: Helpers.generate_location_two(@position),
-          unk22: SecureRandom.random_bytes(32),
-          timestamp: (Time.now.to_f * 1000).to_i,
-          timestamp_since_start: (Time.now.to_f * 1000).to_i - @start_time
+      def use_auth_ticket(req, client)
+        req.auth_ticket = POGOProtos::Networking::Envelopes::AuthTicket.new(
+          start: client.ticket.start, end: client.ticket.ends,
+          expire_timestamp_ms: client.ticket.expire
         )
 
-        req.requests.each do |r|
-          signature.request_hash << Helpers.generate_request(req.auth_ticket.to_proto, r.to_proto)
-        end
-
-        unk6 = POGOProtos::Networking::Envelopes::Unknown6
-
-        logger.info '[+] Generating Signature'
-
-        req.unknown6 = unk6.new(
-          unknown1: 6,
-          unknown2: unk6::Unknown2.new(unknown1: Signature.generate_signature(signature.to_proto))
-        )
-
-        logger.info '[+] Setting Signature'
+        Signature.load_signature(client) if client.sig_path
+        Signature.create_signature(req, self) if client.sig_loaded
       end
 
       def build_sub_request(req, sub_reqs)
@@ -131,7 +109,6 @@ module Poke
         proto_name    = Poke::API::Helpers.camel_case_lower(entry_name) + 'Message'
         logger.debug "[+] #{entry_name}: #{entry_content}"
 
-        require "poke-api/POGOProtos/Networking/Requests/Messages/#{proto_name}"
         POGOProtos::Networking::Requests::Messages.const_get(proto_name).new(entry_content)
       end
 

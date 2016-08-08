@@ -9,7 +9,7 @@ module Poke
         @request  = request
       end
 
-      def decode_response(client)
+      def decode(client)
         logger.info '[+] Decoding Main RPC responses'
         logger.debug "[+] RPC response \r\n#{@response.inspect}"
 
@@ -19,6 +19,12 @@ module Poke
         store_ticket(client)
         store_endpoint(client)
 
+        decode_response
+      end
+
+      private
+
+      def decode_response
         logger.info '[+] Decoding Sub RPC responses'
         decoded_resp = parse_rpc_fields(decode_sub_responses)
 
@@ -34,21 +40,19 @@ module Poke
         logger.debug "[+] Returned RPC response \r\n#{@response}"
       end
 
-      private
-
       def store_ticket(client)
         return unless @response.auth_ticket
-
         auth = @response.auth_ticket.to_hash
 
         if client.ticket.is_new_ticket?(auth[:expire_timestamp_ms])
-          logger.debug "[+] Storing Auth Ticket\r\n#{auth}"
+          logger.info "[+] Using auth ticket instead"
+          logger.debug "[+] Storing auth ticket\r\n#{auth}"
           client.ticket.set_ticket(auth)
         end
       end
 
       def store_endpoint(client)
-        logger.debug "[+] Current Endpoint #{client.endpoint}"
+        logger.debug "[+] Current endpoint #{client.endpoint}"
 
         if client.endpoint == 'https://pgorelease.nianticlabs.com/plfe/rpc'
           raise Errors::InvalidEndpoint if @response.api_url.empty?
@@ -56,7 +60,7 @@ module Poke
 
         return if @response.api_url.empty?
 
-        logger.debug "[+] Setting Endpoint to https://#{@response.api_url}/rpc"
+        logger.debug "[+] Setting endpoint to https://#{@response.api_url}/rpc"
         client.endpoint = "https://#{@response.api_url}/rpc"
       end
 
@@ -80,8 +84,6 @@ module Poke
       def fetch_proto_response_metadata(req)
         entry_name = req.is_a?(Symbol) ? req : req.keys.first
         proto_name = Poke::API::Helpers.camel_case_lower(entry_name) + 'Response'
-
-        require "poke-api/POGOProtos/Networking/Responses/#{proto_name}"
 
         [proto_name, entry_name]
       end

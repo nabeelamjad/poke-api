@@ -1,4 +1,5 @@
 require 'json'
+require 'uri'
 require 'httpclient'
 
 module Poke
@@ -6,7 +7,7 @@ module Poke
     module Auth
       class PTC
         include Logging
-        attr_reader :access_token, :provider
+        attr_reader :access_token, :provider, :expiry
 
         PTC_LOGIN_URL = 'https://sso.pokemon.com/sso/login?service=https%3A%2F%2Fsso.pokemon.com' \
                         '%2Fsso%2Foauth2.0%2FcallbackAuthorize'.freeze
@@ -18,6 +19,7 @@ module Poke
           @password = password
           @provider = 'ptc'
           @client   = HTTPClient.new(agent_name: 'PokeAPI/0.0.1')
+          @expiry   = 0
         end
 
         def connect
@@ -60,8 +62,9 @@ module Poke
             code: ticket
           }
 
-          @access_token = @client.post(PTC_LOGIN_OAUTH, data).body
-                                 .match(/access_token=(.*)&expires/)[1]
+          resp = URI.decode_www_form(@client.post(PTC_LOGIN_OAUTH, data).body).to_h
+          @access_token = resp['access_token']
+          @expiry = resp['expires'].to_i + Helpers.fetch_time(ms: false)
         end
       end
     end

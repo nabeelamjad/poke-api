@@ -5,24 +5,26 @@ Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and 
   * Unofficial, please use at your own RISK.
   * Use a throwaway account if possible.
 
-## Supports
+## Features
   * Supports new SIGNATURE generation!
-  * S2 Geometry cells!
+  * Proxy support!
+  * Automatic access token/ticket refresh upon expiry!
+  * S2 Geometry cells are now supported (natively)!
   * PTC & Google Authentication supported (use full e-mail address for Google)
   * Parses geolocation using Geocoder (parses addresses, postcodes, ip addresses, lat/long, etc)
   * Ability to chain requests and receive response in a single call
   * Logger available, you can also specify your own log formatter and/or log level
-  * Lots of RPC calls, they are listed under [`lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb`](lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb)
+  * Lots of RPC calls, they are listed under [`lib/poke-api/pogoprotos/pogoprotos_networking_requests.rb`](lib/poke-api/pogoprotos/pogoprotos_networking_requests.rb)
 
 ## Installation
 You can use bundler and refer directly to this repository
 ```
 gem 'poke-go-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.1.1'
+    tag: '0.1.2'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.1.gem``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.2.gem``
 
 The gem is also available by using ``gem install poke-go-api`` (poke-api was taken as a name already).
 
@@ -36,64 +38,89 @@ The gem is also available by using ``gem install poke-go-api`` (poke-api was tak
 ## Example Usage
 Running provided ``example.rb`` with your own credentials
 ```ruby
-[2016-07-22T00:06:08+00:00]: INFO  > Poke::API::Client         --: [+] Logging in user: <your_user>
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Client         --: [+] Login Successful
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_PLAYER' to RPC request
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_HATCHED_EGGS' to RPC request
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_INVENTORY' to RPC request
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'CHECK_AWARDED_BADGES' to RPC request
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'DOWNLOAD_SETTINGS' to RPC request with arguments
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Executing RPC request
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Response       --: [+] Decoding Main RPC responses
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Response       --: [+] Decoding Sub RPC responses
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Client         --: [+] Cleaning up RPC requests
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Client         --: [+] Given location: New York, NY, USA
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Client         --: [+] Lat/Long: 40.7127837, -74.0059413
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_MAP_OBJECTS' to RPC request with arguments
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::RequestBuilder --: [+] Executing RPC request
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Response       --: [+] Decoding Main RPC responses
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Response       --: [+] Decoding Sub RPC responses
-[2016-07-22T00:06:09+00:00]: INFO  > Poke::API::Client         --: [+] Cleaning up RPC requests
-{:GET_MAP_OBJECTS=>
-  {:map_cells=>
-    [{:s2_cell_id=>9926595610352287744,
-      :current_timestamp_ms=>1469145969687,
-      :forts=>
-       [{:id=>"1a080ce7d62c464da0ab6c7c4f3eb1cb.16",
-         :last_modified_timestamp_ms=>1469143005205,
-         :latitude=>40.717921,
-         :longitude=>-74.015862,
-         :owned_by_team=>:NEUTRAL,
-         :guard_pokemon_id=>:MISSINGNO,
-         :guard_pokemon_cp=>0,
-         :enabled=>true,
-         :type=>:CHECKPOINT,
-         :gym_points=>0,
-         :is_in_battle=>false,
-         :active_fort_modifier=>"",
-         :lure_info=>nil,
-         :cooldown_complete_timestamp_ms=>0,
-         :sponsor=>:UNSET_SPONSOR,
-         :rendering_type=>:DEFAULT}],
-      :spawn_points=>
-       [{:latitude=>40.71796568193216, :longitude=>-74.01601166049142},
-        {:latitude=>40.71791521124943, :longitude=>-74.01674614317368},
-        {:latitude=>40.718068159209885, :longitude=>-74.01564441809084}],
-      :wild_pokemons=>[],
-      :deleted_objects=>[],
-      :is_truncated_list=>false,
-      :fort_summaries=>[],
-      :decimated_spawn_points=>[],
-      :catchable_pokemons=>[],
-      :nearby_pokemons=>[]}],
-   :status=>:SUCCESS}}
+2016-08-09T02:54:03+01:00]: INFO  > Poke::API::Client         --: [+] Given location: New York, NY, USA
+2016-08-09T02:54:03+01:00]: INFO  > Poke::API::Client         --: [+] Lat/Long: 40.7127837, -74.0059413
+2016-08-09T02:54:03+01:00]: INFO  > Poke::API::Client         --: [+] Logging in user: <<username>>
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Client         --: [+] Provider access token is valid for 03:00:00
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_HATCHED_EGGS' to RPC request
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Using provider access token
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Executing RPC request
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Response       --: [+] Decoding Main RPC responses
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Response       --: [+] Using auth ticket instead
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Response       --: [+] Decoding Sub RPC responses
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Client         --: [+] Cleaning up RPC requests
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Client         --: [+] Login with PTC Successful
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Client         --: [+] File <<signature>> has been set for signature generation
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_MAP_OBJECTS' to RPC request with ar ents
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_PLAYER' to RPC request
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_INVENTORY' to RPC request
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Auth::Ticket   --: [+] Auth ticket is valid for 00:30:01
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Signature      --: [+] Loaded Signature module
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Executing RPC request
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Response       --: [+] Decoding Main RPC responses
+2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Response       --: [+] Decoding Sub RPC responses
+2016-08-09T02:54:07+01:00]: INFO  > Poke::API::Client         --: [+] Cleaning up RPC requests
+<Poke::API::Response:0x000000032f96a0
+@request=
+ [{:GET_MAP_OBJECTS=>
+    {:latitude=>40.7127837,
+     :longitude=>-74.0059413,
+     :since_timestamp_ms=>
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+     :cell_id=>
+      [9926595610352287744,
+       9926595612499771392,
+       9926595614647255040,
+       9926595616794738688,
+       9926595618942222336,
+       9926595621089705984,
+       9926595623237189632,
+       9926595625384673280,
+       9926595627532156928,
+       9926595629679640576,
+       9926595631827124224,
+       9926595633974607872,
+       9926595636122091520,
+       9926595638269575168,
+       9926595640417058816,
+       9926595642564542464,
+       9926595644712026112,
+       9926595646859509760,
+       9926595649006993408,
+       9926595651154477056,
+       9926595653301960704]}},
+  :GET_PLAYER,
+  :GET_INVENTORY],
+@response=
+ {:GET_MAP_OBJECTS=>
+   {:map_cells=>
+     [{:s2_cell_id=>9926595631827124224,
+       :current_timestamp_ms=>1470707648730,
+       :forts=>
+        [{:id=>"44a31b1c990547f49537ca74617bf557.12",
+          :last_modified_timestamp_ms=>1470707647002,
+          :latitude=>40.712891,
+          :longitude=>-74.004869,
+          :owned_by_team=>:BLUE,
+          :guard_pokemon_id=>:GYARADOS,
+          :guard_pokemon_cp=>0,
+          :enabled=>true,
+          :type=>:GYM,
+          :gym_points=>1604,
+          :is_in_battle=>true,
+          :active_fort_modifier=>"",
+          :lure_info=>nil,
+          :cooldown_complete_timestamp_ms=>0,
+          :sponsor=>:UNSET_SPONSOR,
+          :rendering_type=>:DEFAULT},
+          ...
 ```
 
 # RPC call requests and responses
-An RPC request can be made on its own or with multiple calls, it also provides the ability to specify arguments. You can find all the supported requests under [`lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb`](lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb). Please note that you will need to check if any of these requests require arguments, these can be found under the folder [`lib/poke-api/POGOProtos/Networking/Requests/Messages`](lib/poke-api/POGOProtos/Networking/Requests/Messages) using the same naming convention.
+An RPC request can be made on its own or with multiple calls, it also provides the ability to specify arguments. You can find all the supported requests in [`lib/poke-api/pogoprotos/pogoprotos_networking_requests.rb`](lib/poke-api/pogoprotos/pogoprotos_networking_requests.rb). Please note that you will need to check if any of these requests require arguments, these can be found in [`lib/poke-api/pogoprotos/pogoprotos_networking_requests_messages.rb`](lib/poke-api/pogoprotos/pogoprotos_networking_requests_messages.rb) using the same naming convention.
 
 **Let's assume we want to delete a few great balls from our inventory**  
-If you open [**`RequestType.rb`**](lib/poke-api/POGOProtos/Networking/Requests/RequestType.rb) we can see that there's an entry for `:RECYCLE_INVENTORY_ITEM`. We now know that our call is ``recycle_inventory_item``, next we have to find out if there're any arguments to this call. We can find any arguments inside the [**`Messages`**](lib/poke-api/POGOProtos/Networking/Requests/Messages) folder, we see a file named [**`RecycleInventoryItemMessage.rb`**](lib/poke-api/POGOProtos/Networking/Requests/Messages/RecycleInventoryItemMessage.rb) which contains two arguments: ``item_id`` and ``count``. Furthermore we can see that ``item_id`` directly links to [**`POGOProtos.Inventory.Item.ItemId`**](lib/poke-api/POGOProtos/Inventory/Item/ItemId.rb), this is a file you can open as well with the item ids specified inside. In here we can see the Item ID for a great ball is 2.
+If you open [**`Requests`**](lib/poke-api/pogoprotos/pogoprotos_networking_requests.rb) we can see that there's an entry for `:RECYCLE_INVENTORY_ITEM`. We now know that our call is ``recycle_inventory_item``, next we have to find out if there're any arguments to this call. We can find any possible arguments inside [**`Messages`**](lib/poke-api/pogoprotos/pogoprotos_networking_requests_messages.rb) for our call. This shows two argments: ``item_id`` and ``count``. Furthermore we can see that ``item_id`` directly links to [**`POGOProtos.Inventory.Item.ItemId`**](lib/poke-api/pogoprotos/pogoprotos_inventory_item.rb), this is a file you can open as well with the item ids specified inside. In here we can see the Item ID for a great ball is 2.
 
 Our example request could be as follows:
 ```ruby
@@ -105,6 +132,9 @@ client = Poke::API::Client.new
 # Both PTC/Google available as authentication provider
 client.store_location('New York')
 client.login('username@gmail.com', 'password', 'google')
+
+# Activate the encryption method to generate a signature (only required for map objects)
+client.activate_signature('/path/to/encryption/file')
 
 # Add RPC calls
 client.recycle_inventory_item(item_id: 2, count: 2)
@@ -140,6 +170,23 @@ puts call.response.inspect
   :error => ""
 }
 ```
+# Proxy support
+If you wish to use a proxy then you can do so by adding in the environment variable ``ENV['HTTP_PROXY']`` before you login or call any method with ``poke-api``. ``HTTP_PROXY`` can take a connection string as described [**here**](http://www.rubydoc.info/gems/httpclient/2.1.5.2/HTTPClient).
+> Sets HTTP proxy used for HTTP connection. Given proxy can be an URI, a String or nil. You can set user/password for proxy authentication like HTTPClient#proxy = 'user:passwd@myproxy:8080'
+
+>You can use environment variable 'http_proxy' or 'HTTP_PROXY' for it. You need to use 'cgi_http_proxy' or 'CGI_HTTP_PROXY' instead if you run HTTPClient from CGI environment from security reason. (HTTPClient checks 'REQUEST_METHOD' environment variable whether it's CGI or not)
+
+>Calling this method resets all existing sessions.
+
+You can use it as follows:
+
+```ruby
+require 'poke-api'
+
+ENV['HTTP_PROXY'] = 'http://username@password:localhost:8080
+...
+# procede as normal
+```
 
 # Logger settings
 If you wish to change the log level you can do so before instantiating the client by using ``Poke::API::Logging.log_level = :INFO`` where ``:INFO`` is the desired level, possible values are: ``:DEBUG``, ``:INFO``, ``:WARN``, ``:FATAL`` and ``UNKNOWN``
@@ -169,25 +216,13 @@ You can use this helper method to generate cells, please note that not all S2 Ge
 ```ruby
 require 'poke-api'
 
-def get_cells(lat, lng, radius = 10)
-  s2_point = Poke::API::Geometry::S2LatLon.new(lat, lng).to_point
-  s2_cell  = Poke::API::Geometry::S2CellId.from_point(s2_point).parent(15)
-
-  next_cell = s2_cell.next
-  prev_cell = s2_cell.prev
-
-  radius.times.reduce([s2_cell.id]) do |acc, el|
-    acc += [next_cell.id, prev_cell.id]
-    next_cell = next_cell.next
-    prev_cell = prev_cell.prev
-    acc
-  end.sort
-end
-
 client = Poke::API::Client.new
 client.store_location('New York')
 
-get_cells(client.lat, client.lng)
+[2016-08-09T02:52:10+01:00]: INFO  > Poke::API::Client         --: [+] Given location: New York, NY, USA
+[2016-08-09T02:52:10+01:00]: INFO  > Poke::API::Client         --: [+] Lat/Long: 40.7127837, -74.0059413
+
+Poke::API::Helpers.get_cells(client.lat, client.lng)
 => [9926595610352287744, 9926595612499771392, 9926595614647255040,
     9926595616794738688, 9926595618942222336, 9926595621089705984,
     9926595623237189632, 9926595625384673280, 9926595627532156928, 

@@ -15,7 +15,7 @@ module Poke
 
       def logger
         @@loggers[self.class.name] ||= Logger.new(STDOUT).tap do |logger| 
-          logger.progname = self.class.name
+          logger.progname = self.class.name == 'Module' ? self.name : self.class.name
           logger.level = Logger.const_get(@@log_level)
           logger.formatter = @@formatter
         end

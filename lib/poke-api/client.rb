@@ -3,7 +3,7 @@ module Poke
     class Client
       include Logging
       attr_accessor :lat, :lng, :alt, :endpoint, :ticket, :sig_loaded
-      attr_reader :sig_path
+      attr_reader :sig_path, :auth
 
       def initialize
         @auth       = nil
@@ -18,25 +18,28 @@ module Poke
       end
 
       def login(username, password, provider)
-        provider = provider.upcase
-        raise Errors::InvalidProvider, provider unless %w(PTC GOOGLE).include?(provider)
+        @username, @password, @provider = username, password, provider.upcase
+
+        raise Errors::InvalidProvider, provider unless %w(PTC GOOGLE).include?(@provider)
         logger.info "[+] Logging in user: #{username}"
 
         begin
-          @auth = Auth.const_get(provider).new(username, password)
+          @auth = Auth.const_get(@provider).new(username, password)
           @auth.connect
         rescue StandardError => ex
-          raise Errors::LoginFailure.new(provider, ex)
+          raise Errors::LoginFailure.new(@provider, ex)
         end
 
         get_hatched_eggs
         call
-        logger.info "[+] Login with #{provider} Successful"
+        logger.info "[+] Login with #{@provider} Successful"
       end
 
       def call
         raise Errors::LoginRequired unless @auth
         raise Errors::NoRequests if @reqs.empty?
+
+        check_expiry
         req = RequestBuilder.new(@auth, [@lat, @lng, @alt], @endpoint)
 
         begin
@@ -80,6 +83,21 @@ module Poke
       end
 
       private
+
+      def check_expiry
+        unless @ticket.has_ticket?
+          now = Helpers.fetch_time(ms: false)
+
+          if now < (@auth.expiry - 30)
+            duration = format('%02d:%02d:%02d', *Helpers.format_time_diff(now, @auth.expiry, false))
+            logger.info "[+] Provider access token is valid for #{duration}"
+            return
+          end
+
+          logger.info "[+] Refreshing access token as it is no longer valid"
+          login(@username, @password, @provider)
+        end
+      end
 
       def method_missing(method, *args)
         POGOProtos::Networking::Requests::RequestType.const_get(method.upcase)

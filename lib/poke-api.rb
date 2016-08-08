@@ -18,6 +18,6 @@ require 'poke-api/geometry/s2_lat_lon'
 require 'poke-api/geometry/s2_point'
 
 # Load Google Generated POGOProtos
-require 'poke-api/POGOProtos/Signature'
-require 'poke-api/POGOProtos/Networking/Envelopes/RequestEnvelope'
-require 'poke-api/POGOProtos/Networking/Envelopes/ResponseEnvelope'
+require 'poke-api/pogoprotos/pogoprotos_networking_envelopes'
+require 'poke-api/pogoprotos/pogoprotos_networking_requests_messages'
+require 'poke-api/pogoprotos/pogoprotos_networking_responses'

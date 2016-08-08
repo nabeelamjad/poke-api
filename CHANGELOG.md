@@ -1,6 +1,12 @@
 Changelog
 ------------------
 
+0.1.2 (09-08-2016)
+------------------
+* **Feature** - Access tokens and authentication tickets will automatically refresh upon expiry
+* **Feature** - S2 Geometry cell has been added to the helper method ``Poke::API::Helpers.get_cells(...)``
+* **New Protobufs** - Protocol Buffers have been updated to the latest version and minified as possible
+
 0.1.1 (08-08-2016)
 ------------------
 * **Fix** - Fixed an issue whereby path was incorrectly referenced as a variable
