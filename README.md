@@ -21,10 +21,10 @@ You can use bundler and refer directly to this repository
 ```
 gem 'poke-go-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.1.2'
+    tag: '0.1.5'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.2.gem``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.5.gem``
 
 The gem is also available by using ``gem install poke-go-api`` (poke-api was taken as a name already).
 
