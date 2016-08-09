@@ -183,7 +183,7 @@ You can use it as follows:
 ```ruby
 require 'poke-api'
 
-ENV['HTTP_PROXY'] = 'http://username@password:localhost:8080
+ENV['HTTP_PROXY'] = 'http://username:password@localhost:8080
 ...
 # procede as normal
 ```
