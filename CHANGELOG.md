@@ -4,12 +4,6 @@ Changelog
 0.1.7 (10-08-2016)
 ------------------
 * **Feature** - You can now provide a ``HTTPClient`` instantation for proxy purposes 
-  - ```ruby
-    require 'poke-api'
-    client = Poke::API::Client.new
-    client.http_client = HTTPClient.new('http://localhost:8080')
-    client.http_client.set_proxy_auth(user, password)
-    ```
 * **Feature** - A Google refresh token can now be set using ``refresh_token`` setter method (i.e. ``client.refresh_token = 'my_refresh_token'``). The refresh token will always be used first (you can leave out the username and password as empty strings)
 
 0.1.5 (09-08-2016)
