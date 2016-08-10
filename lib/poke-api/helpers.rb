@@ -27,7 +27,7 @@ module Poke
         def generate_location_two(pos)
           location_bytes = d2h(pos[0]) + d2h(pos[1]) + d2h(pos[2])
 
-          XXhash.xxh32(location_bytes, seed=0x1B845238)
+          XXhash.xxh32(location_bytes, 0x1B845238)
         end 
 
         def generate_request(auth_ticket, request)
@@ -53,7 +53,7 @@ module Poke
           next_cell = s2_cell.next
           prev_cell = s2_cell.prev
 
-          radius.times.reduce([s2_cell.id]) do |acc, el|
+          radius.times.reduce([s2_cell.id]) do |acc, _|
             acc += [next_cell.id, prev_cell.id]
             next_cell = next_cell.next
             prev_cell = prev_cell.prev

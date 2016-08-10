@@ -32,7 +32,7 @@ module Poke
       end
 
       class GoogleTwoFactorAuthenticationFailure < StandardError
-        def initialize(response)
+        def initialize
           super("Two-factor authentication not supported. Create an app-specific password to log in.")
         end
       end
