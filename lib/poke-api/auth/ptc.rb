@@ -14,7 +14,7 @@ module Poke
         PTC_LOGIN_OAUTH = 'https://sso.pokemon.com/sso/oauth2.0/accessToken'.freeze
         PTC_LOGIN_CLIENT_SECRET = 'w8ScCUXJQc6kXKw8FiOhd8Fixzht18Dq3PEVkUCP5ZPxtgyWsbTvWHFLm2wNY0JR'.freeze
 
-        def initialize(username, password)
+        def initialize(username, password, _refresh_token)
           @username = username
           @password = password
           @provider = 'ptc'

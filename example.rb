@@ -1,11 +1,18 @@
 require 'poke-api'
 require 'pp'
 
+# Refer to README for information for setting up a Proxy if required
+
 # Instantiate the client
 client = Poke::API::Client.new
 
-# Use Google auth with 'username@gmail.com', 'password', 'google'
+# Store your location, you can also store your lat/lng directly
+# using client.store_lat_lng(lat, lng)
+# or using client.lat = 10, client.lng = 10, client.alt = 10
 client.store_location('New York')
+
+# Use Google auth with 'username@gmail.com', 'password', 'google'
+# Optionally set your Google Refresh token using client.refresh_token = 'my-token'
 client.login('username', 'password', 'ptc')
 
 # Activate the encryption method to generate a signature

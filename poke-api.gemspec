@@ -10,11 +10,11 @@ Gem::Specification.new do |spec|
   spec.description = 'An API wrapper for Pokemon GO'
   spec.version = Poke::API::VERSION
 
-  spec.date = '2016-08-09'
+  spec.date = '2016-08-10'
   spec.authors = ['Nabeel Amjad']
   spec.licenses = ['MIT']
 
-  spec.files = Dir.glob('lib/**/*') + Dir.glob('protos/**/*') 
+  spec.files = Dir.glob('lib/**/*') 
   spec.homepage = 'https://github.com/nabeelamjad/poke-api'
 
   spec.add_runtime_dependency 'httpclient', '2.8.0'

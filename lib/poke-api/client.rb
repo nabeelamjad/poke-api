@@ -2,36 +2,32 @@ module Poke
   module API
     class Client
       include Logging
-      attr_accessor :lat, :lng, :alt, :endpoint, :ticket, :sig_loaded
-      attr_reader :sig_path, :auth
+      attr_accessor :endpoint, :sig_loaded, :refresh_token,
+                    :lat, :lng, :alt, :http_client, :ticket
+      attr_reader   :sig_path, :auth
 
       def initialize
-        @auth       = nil
         @endpoint   = 'https://pgorelease.nianticlabs.com/plfe/rpc'
         @reqs       = []
         @lat        = 0
         @lng        = 0
-        @alt        = 8
+        @alt        = rand(1..9)
         @ticket     = Auth::Ticket.new
-        @sig_path   = nil
         @sig_loaded = false
       end
 
       def login(username, password, provider)
         @username, @password, @provider = username, password, provider.upcase
-
         raise Errors::InvalidProvider, provider unless %w(PTC GOOGLE).include?(@provider)
-        logger.info "[+] Logging in user: #{username}"
 
         begin
-          @auth = Auth.const_get(@provider).new(username, password)
+          @auth = Auth.const_get(@provider).new(@username, @password, @refresh_token)
           @auth.connect
         rescue StandardError => ex
           raise Errors::LoginFailure.new(@provider, ex)
         end
 
-        get_hatched_eggs
-        call
+        initialize_ticket
         logger.info "[+] Login with #{@provider} Successful"
       end
 
@@ -40,7 +36,7 @@ module Poke
         raise Errors::NoRequests if @reqs.empty?
 
         check_expiry
-        req = RequestBuilder.new(@auth, [@lat, @lng, @alt], @endpoint)
+        req = RequestBuilder.new(@auth, [@lat, @lng, @alt], @endpoint, @http_client)
 
         begin
           resp = req.request(@reqs, self)
@@ -67,9 +63,8 @@ module Poke
         pos = Poke::API::Helpers.get_position(loc).first
         logger.info "[+] Given location: #{pos.address}"
 
-        logger.info "[+] Lat/Long: #{pos.latitude}, #{pos.longitude}"
-        @lat = pos.latitude
-        @lng = pos.longitude
+        logger.info "[+] Lat/Long/Alt: #{pos.latitude}, #{pos.longitude}"
+        @lat, @lng = pos.latitude, pos.longitude
       end
 
       def store_lat_lng(lat, lng)
@@ -83,6 +78,11 @@ module Poke
       end
 
       private
+
+      def initialize_ticket
+        get_hatched_eggs
+        call
+      end
 
       def check_expiry
         unless @ticket.has_ticket?

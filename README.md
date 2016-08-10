@@ -21,10 +21,10 @@ You can use bundler and refer directly to this repository
 ```
 gem 'poke-go-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.1.5'
+    tag: '0.1.6'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.5.gem``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.6.gem``
 
 The gem is also available by using ``gem install poke-go-api`` (poke-api was taken as a name already).
 
@@ -40,7 +40,6 @@ Running provided ``example.rb`` with your own credentials
 ```ruby
 2016-08-09T02:54:03+01:00]: INFO  > Poke::API::Client         --: [+] Given location: New York, NY, USA
 2016-08-09T02:54:03+01:00]: INFO  > Poke::API::Client         --: [+] Lat/Long: 40.7127837, -74.0059413
-2016-08-09T02:54:03+01:00]: INFO  > Poke::API::Client         --: [+] Logging in user: <<username>>
 2016-08-09T02:54:06+01:00]: INFO  > Poke::API::Client         --: [+] Provider access token is valid for 03:00:00
 2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Adding 'GET_HATCHED_EGGS' to RPC request
 2016-08-09T02:54:06+01:00]: INFO  > Poke::API::RequestBuilder --: [+] Using provider access token
@@ -170,22 +169,32 @@ puts call.response.inspect
   :error => ""
 }
 ```
-# Proxy support
-If you wish to use a proxy then you can do so by adding in the environment variable ``ENV['HTTP_PROXY']`` before you login or call any method with ``poke-api``. ``HTTP_PROXY`` can take a connection string as described [**here**](http://www.rubydoc.info/gems/httpclient/2.1.5.2/HTTPClient).
-> Sets HTTP proxy used for HTTP connection. Given proxy can be an URI, a String or nil. You can set user/password for proxy authentication like HTTPClient#proxy = 'user:passwd@myproxy:8080'
-
->You can use environment variable 'http_proxy' or 'HTTP_PROXY' for it. You need to use 'cgi_http_proxy' or 'CGI_HTTP_PROXY' instead if you run HTTPClient from CGI environment from security reason. (HTTPClient checks 'REQUEST_METHOD' environment variable whether it's CGI or not)
-
->Calling this method resets all existing sessions.
-
-You can use it as follows:
+# Google Refresh Token
+A Google refresh token can be set on ``Poke::API::Client``, this token will automatically be used first to generate an access token if available. You do not need to pass in any username or password if you provide a refresh token. To support backwards compatibility you will still have to call ``client.login('', '', 'google')``, however, you can leave the username and password as blank strings instead.
 
 ```ruby
 require 'poke-api'
 
-ENV['HTTP_PROXY'] = 'http://username@password:localhost:8080
+client = Poke::API::Client.new
+client.refresh_token = 'my-refresh-token'
+client.login('', '', 'google')
+```
+
+In a future revamp release the ``login`` method will change to accept keyword arguments such as ``client.login(provider: 'google')`` allowing you to ignore the rest.
+
+To generate a Google refresh token please have a look at [**this issue**](https://github.com/nabeelamjad/poke-api/issues/26#issuecomment-237404470), a refresh token will last indefinitely.
+
+# Proxy support
+If you wish to use a proxy then you can do so by providing your own ``HTTPClient`` instantation with your preferred setup to ``Poke::API::Client`` using ``http_client`` setter/getter.
+
+```ruby
+require 'poke-api'
+
+client = Poke::API::Client.new
+client.http_client = HTTPClient.new('http://localhost:8080')
+client.http_client.set_proxy_auth(user, password)
 ...
-# procede as normal
+# Proceed as normal
 ```
 
 # Logger settings

@@ -6,12 +6,12 @@ module Poke
       include Logging
       attr_reader :position, :start_time
 
-      def initialize(auth, pos, endpoint)
+      def initialize(auth, pos, endpoint, http_client)
         @access_token = auth.access_token
         @provider     = auth.provider
         @endpoint     = endpoint
         @position     = pos
-        @client       = HTTPClient.new(agent_name: 'PokeAPI/0.0.1')
+        @client       = http_client ? http_client : HTTPClient.new
         @start_time   = Helpers.fetch_time
       end
 
