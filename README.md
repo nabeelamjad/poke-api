@@ -11,6 +11,7 @@ Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and 
   * Automatic access token/ticket refresh upon expiry!
   * S2 Geometry cells are now supported (natively)!
   * PTC & Google Authentication supported (use full e-mail address for Google)
+  * Google refresh token support
   * Parses geolocation using Geocoder (parses addresses, postcodes, ip addresses, lat/long, etc)
   * Ability to chain requests and receive response in a single call
   * Logger available, you can also specify your own log formatter and/or log level
