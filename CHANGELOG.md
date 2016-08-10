@@ -1,7 +1,7 @@
 Changelog
 ------------------
 
-0.1.6 (10-08-2016)
+0.1.7 (10-08-2016)
 ------------------
 * **Feature** - You can now provide a ``HTTPClient`` instantation for proxy purposes 
   - ```ruby

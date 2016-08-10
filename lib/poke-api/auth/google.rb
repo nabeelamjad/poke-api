@@ -57,6 +57,8 @@ module Poke
 
           @access_token = data['id_token']
           @expiry = data['expires_in'].to_i + Helpers.fetch_time(ms: false)
+
+          raise 'Invalid refresh token' unless data['id_token']
         end
 
         def perform_request(method)
