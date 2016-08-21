@@ -62,7 +62,7 @@ module Poke
             code: ticket
           }
 
-          resp = URI.decode_www_form(@client.post(PTC_LOGIN_OAUTH, data).body).to_h
+          resp = Hash[URI.decode_www_form(@client.post(PTC_LOGIN_OAUTH, data).body)]
           @access_token = resp['access_token']
           @expiry = resp['expires'].to_i + Helpers.fetch_time(ms: false)
         end

@@ -30,18 +30,20 @@ module Poke
         output.to_str
       end
 
-      def self.create_signature(req, client)
+      def self.create_signature(req, req_client, api_client)
         signature = POGOProtos::Networking::Envelopes::Signature.new(
-          location_hash1: Helpers.generate_location_one(req.auth_ticket.to_proto, client.position),
-          location_hash2: Helpers.generate_location_two(client.position),
-          unknown22: SecureRandom.random_bytes(32),
+          location_hash1: Helpers.generate_location_one(req.auth_ticket.to_proto, req_client.position),
+          location_hash2: Helpers.generate_location_two(req_client.position),
+          unknown25: -8537042734809897855,
           timestamp: Helpers.fetch_time,
-          timestamp_since_start: Helpers.fetch_time - client.start_time
+          timestamp_since_start: Helpers.fetch_time - req_client.start_time
         )
 
         add_requests(req, signature)
+        add_optional_signature_information(signature, api_client)
 
-        logger.debug "[+] Generated Signature \r\n#{signature.to_proto.inspect}"
+        logger.debug "[+] Generated Signature \r\n#{signature.inspect}"
+        logger.debug "[+] Generated Protobuf Signature \r\n#{signature.to_proto.inspect}"
         add_unknown6(req, signature)
       end
 
@@ -58,6 +60,22 @@ module Poke
             encrypted_signature: generate_signature(signature.to_proto)
           )
         )
+      end
+
+      def self.add_optional_signature_information(sig, api_client)
+        %i(android_gps_info sensor_info device_info activity_status location_fix).each do |i|
+          name = Helpers.camel_case_lower(i)
+
+          if api_client.send(i)
+            message = add_optional_information(name, api_client.send(i))
+            i == :location_fix ? (sig.send(i) << message) : sig.send("#{i.to_s}=", message)
+          end
+        end
+      end
+
+      def self.add_optional_information(name, client_info)
+        info_class = POGOProtos::Networking::Envelopes::Signature.const_get(name)
+        info_class.new(client_info)
       end
 
       private_class_method :add_requests, :add_unknown6

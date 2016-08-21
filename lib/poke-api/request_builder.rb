@@ -64,7 +64,7 @@ module Poke
         )
 
         Signature.load_signature(client) if client.sig_path
-        Signature.create_signature(req, self) if client.sig_loaded
+        Signature.create_signature(req, self, client) if client.sig_loaded
       end
 
       def build_sub_request(req, sub_reqs)
@@ -73,8 +73,6 @@ module Poke
             append_int_request(req, sub_req)
           elsif sub_req.is_a?(Hash)
             append_hash_request(req, sub_req)
-          else
-            raise Errors::InvalidRequestEntry, sub_req
           end
         end
       end
@@ -113,7 +111,10 @@ module Poke
       end
 
       def execute_rpc_request(request)
-        @client.post(@endpoint, request)
+        resp = @client.post(@endpoint, request)
+        raise Errors::ForbiddenAccess if resp.status == 403
+
+        resp
       end
     end
   end

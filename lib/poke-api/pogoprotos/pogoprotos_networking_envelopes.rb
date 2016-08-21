@@ -10,7 +10,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "POGOProtos.Networking.Envelopes.Signature" do
     optional :timestamp_since_start, :uint64, 2
     repeated :location_fix, :message, 4, "POGOProtos.Networking.Envelopes.Signature.LocationFix"
-    optional :gps_info, :message, 5, "POGOProtos.Networking.Envelopes.Signature.AndroidGpsInfo"
+    optional :android_gps_info, :message, 5, "POGOProtos.Networking.Envelopes.Signature.AndroidGpsInfo"
     optional :sensor_info, :message, 7, "POGOProtos.Networking.Envelopes.Signature.SensorInfo"
     optional :device_info, :message, 8, "POGOProtos.Networking.Envelopes.Signature.DeviceInfo"
     optional :activity_status, :message, 9, "POGOProtos.Networking.Envelopes.Signature.ActivityStatus"

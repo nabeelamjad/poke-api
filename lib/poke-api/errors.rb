@@ -66,6 +66,12 @@ module Poke
           super("Level #{level} is invalid, must be between 0 and 30.")
         end
       end
+
+      class ForbiddenAccess < StandardError
+        def initialize
+          super("Your host is unable to receive a response as it is banned.")
+        end
+      end
     end
   end
 end
