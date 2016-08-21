@@ -108,7 +108,7 @@ client.store_location('New York')
 client.login('username', 'password', 'ptc')
 
 # Active signature as required for map_objects
-client.activate_signature('/path/to/encrypt')
+client.activate_signature('/path/to/encrypt/file')
 
 # Start spiral search
 find_poi(client, client.lat, client.lng)

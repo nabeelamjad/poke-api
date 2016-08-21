@@ -7,6 +7,7 @@ Poke API is a port for Ruby from [pgoapi](https://github.com/tejado/pgoapi) and 
 
 ## Features
   * Supports new SIGNATURE generation!
+  * Allows you to set optional signature information for every request (``:android_gps_info``, ``:sensor_info``, ``:device_info``,``:activity_status`` and ``:location_fix``)
   * Proxy support!
   * Automatic access token/ticket refresh upon expiry!
   * S2 Geometry cells are now supported (natively)!
@@ -22,10 +23,10 @@ You can use bundler and refer directly to this repository
 ```
 gem 'poke-go-api',
     git: "https://github.com/nabeelamjad/poke-api.git",
-    tag: '0.1.7'
+    tag: '0.2.0'
 ```
 
-Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.1.7.gem``
+Or, alternatively you can download the repository and run ``gem build poke-api.gemspec`` followed with ``gem install poke-api-0.2.0.gem``
 
 The gem is also available by using ``gem install poke-go-api`` (poke-api was taken as a name already).
 
@@ -134,7 +135,7 @@ client.store_location('New York')
 client.login('username@gmail.com', 'password', 'google')
 
 # Activate the encryption method to generate a signature (only required for map objects)
-client.activate_signature('/path/to/encryption/file')
+client.activate_signature('/path/to/encrypt/file')
 
 # Add RPC calls
 client.recycle_inventory_item(item_id: 2, count: 2)
@@ -170,6 +171,36 @@ puts call.response.inspect
   :error => ""
 }
 ```
+# Optional Signature Information
+You can specify ``:android_gps_info``, ``:sensor_info``, ``:device_info``,``:activity_status`` and ``:location_fix`` for every request that is made. Here's an example how this is possible:
+
+```ruby
+require 'poke-api'
+
+client = Poke::API::Client.new
+client.activate_signature('/path/to/encrypt/file')
+client.store_location('New York')
+client.login('username', 'password', 'ptc')
+
+# Set your optional requests here
+client.location_fix = {provider: 'foo'}
+client.android_gps_info = {satellites_prn: [1]}
+client.sensor_info = {magnetometer_x: 1.2}
+client.device_info = {device_model: 'some-device'}
+client.activity_status = {cycling: false}
+
+cell_ids = Poke::API::Helpers.get_cells(client.lat, client.lng)
+
+client.get_map_objects(
+  latitude: client.lat,
+  longitude: client.lng,
+  since_timestamp_ms: [0] * cell_ids.length,
+  cell_id: cell_ids
+)
+
+client.call
+```
+Please refer to [**`networking_envelopes`**](lib/poke-api/pogoprotos/pogoprotos_networking_envelopes.rb) for more information as to which arguments are supported.
 # Google Refresh Token
 A Google refresh token can be set on ``Poke::API::Client``, this token will automatically be used first to generate an access token if available. You do not need to pass in any username or password if you provide a refresh token. To support backwards compatibility you will still have to call ``client.login('', '', 'google')``, however, you can leave the username and password as blank strings instead.
 

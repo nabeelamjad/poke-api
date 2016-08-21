@@ -1,6 +1,12 @@
 Changelog
 ------------------
 
+0.2.0 (21-08-2016)
+------------------
+* **Fix** - Fixed an issue whereby ``to_h`` was called causing Ruby 2.0.0 to not work. 
+* **Change** - The initial ticket will always request to mark tutorial as complete (this supports new PTC accounts out of the box without accepting TOS)
+* **Feature** - You can now provide the following optional information in the client constructor: ``:android_gps_info``, ``:sensor_info``, ``:device_info``,``:activity_status`` and ``:location_fix``
+
 0.1.7 (10-08-2016)
 ------------------
 * **Feature** - You can now provide a ``HTTPClient`` instantation for proxy purposes 

@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.description = 'An API wrapper for Pokemon GO'
   spec.version = Poke::API::VERSION
 
-  spec.date = '2016-08-10'
+  spec.date = '2016-08-21'
   spec.authors = ['Nabeel Amjad']
   spec.licenses = ['MIT']
 

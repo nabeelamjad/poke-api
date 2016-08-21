@@ -17,7 +17,7 @@ client.login('username', 'password', 'ptc')
 
 # Activate the encryption method to generate a signature
 # Where path is the path to your encrypt .so/.dll
-client.activate_signature('lib/poke-api/encrypt64bit.dll')
+client.activate_signature('/path/to/encrypt/file')
 
 # Get cells
 cell_ids = Poke::API::Helpers.get_cells(client.lat, client.lng)
