@@ -82,11 +82,7 @@ module Poke
       private
 
       def initialize_ticket
-        mark_tutorial_complete(
-          tutorials_completed: [0],
-          send_marketing_emails: false,
-          send_push_notifications: false
-        )
+        get_hatched_eggs
         call
       end
 

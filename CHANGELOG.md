@@ -1,5 +1,8 @@
 Changelog
 ------------------
+0.2.1 (21-08-2016)
+------------------
+* **Revert** - Initial ticket is reverted back to ``get_hatched_eggs`` as Niantic may detect someone constantly accepting TOS whereas this is only possible once in game. Accepting TOS is out of bounds for the API client (however it is possible to add the request for TOS before logging in as per usual methods)
 
 0.2.0 (21-08-2016)
 ------------------
