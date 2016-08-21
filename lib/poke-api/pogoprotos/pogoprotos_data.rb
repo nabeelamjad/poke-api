@@ -51,6 +51,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :equipped_badge, :message, 12, "POGOProtos.Data.Player.EquippedBadge"
     optional :contact_settings, :message, 13, "POGOProtos.Data.Player.ContactSettings"
     repeated :currencies, :message, 14, "POGOProtos.Data.Player.Currency"
+    optional :remaining_codename_claims, :int32, 15
   end
   add_message "POGOProtos.Data.AssetDigestEntry" do
     optional :asset_id, :string, 1

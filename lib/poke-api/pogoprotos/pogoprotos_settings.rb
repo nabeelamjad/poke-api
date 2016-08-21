@@ -21,12 +21,19 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :deploy_attack_multiplier, :double, 5
     optional :far_interaction_range_meters, :double, 6
   end
+  add_message "POGOProtos.Settings.GpsSettings" do
+    optional :driving_warning_speed_meters_per_second, :float, 1
+    optional :driving_warning_cooldown_minutes, :float, 2
+    optional :driving_speed_sample_interval_seconds, :float, 3
+    optional :driving_speed_sample_count, :int32, 4
+  end
   add_message "POGOProtos.Settings.GlobalSettings" do
     optional :fort_settings, :message, 2, "POGOProtos.Settings.FortSettings"
     optional :map_settings, :message, 3, "POGOProtos.Settings.MapSettings"
     optional :level_settings, :message, 4, "POGOProtos.Settings.LevelSettings"
     optional :inventory_settings, :message, 5, "POGOProtos.Settings.InventorySettings"
     optional :minimum_client_version, :string, 6
+    optional :gps_settings, :message, 7, "POGOProtos.Settings.GpsSettings"
   end
   add_message "POGOProtos.Settings.InventorySettings" do
     optional :max_pokemon, :int32, 1
@@ -48,6 +55,7 @@ module POGOProtos
   module Settings
     MapSettings = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Settings.MapSettings").msgclass
     FortSettings = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Settings.FortSettings").msgclass
+    GpsSettings = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Settings.GpsSettings").msgclass
     GlobalSettings = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Settings.GlobalSettings").msgclass
     InventorySettings = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Settings.InventorySettings").msgclass
     LevelSettings = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Settings.LevelSettings").msgclass

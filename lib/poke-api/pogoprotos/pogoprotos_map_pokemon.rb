@@ -19,6 +19,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :pokemon_id, :enum, 1, "POGOProtos.Enums.PokemonId"
     optional :distance_in_meters, :float, 2
     optional :encounter_id, :fixed64, 3
+    optional :fort_id, :string, 4
+    optional :fort_image_url, :string, 5
   end
   add_message "POGOProtos.Map.Pokemon.MapPokemon" do
     optional :spawn_point_id, :string, 1

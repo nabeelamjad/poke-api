@@ -93,6 +93,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :player_longitude, :double, 3
     optional :gym_latitude, :double, 4
     optional :gym_longitude, :double, 5
+    optional :client_version, :string, 6
   end
   add_message "POGOProtos.Networking.Requests.Messages.SfidaActionLogMessage" do
   end
@@ -201,7 +202,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :hash, :string, 1
   end
   add_message "POGOProtos.Networking.Requests.Messages.GetPlayerMessage" do
-    optional :app_version, :string, 1
   end
   add_message "POGOProtos.Networking.Requests.Messages.AddFortModifierMessage" do
     optional :modifier_type, :enum, 1, "POGOProtos.Inventory.Item.ItemId"

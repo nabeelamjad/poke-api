@@ -29,11 +29,11 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :guard_pokemon_cp, :int32, 7
     optional :gym_points, :int64, 10
     optional :is_in_battle, :bool, 11
+    repeated :active_fort_modifier, :enum, 12, "POGOProtos.Inventory.Item.ItemId"
+    optional :lure_info, :message, 13, "POGOProtos.Map.Fort.FortLureInfo"
     optional :cooldown_complete_timestamp_ms, :int64, 14
     optional :sponsor, :enum, 15, "POGOProtos.Map.Fort.FortSponsor"
     optional :rendering_type, :enum, 16, "POGOProtos.Map.Fort.FortRenderingType"
-    optional :active_fort_modifier, :bytes, 12
-    optional :lure_info, :message, 13, "POGOProtos.Map.Fort.FortLureInfo"
   end
   add_message "POGOProtos.Map.Fort.FortLureInfo" do
     optional :fort_id, :string, 1

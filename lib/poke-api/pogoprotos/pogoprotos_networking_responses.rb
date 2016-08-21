@@ -416,6 +416,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :user_message, :string, 2
     optional :is_assignable, :bool, 3
     optional :status, :enum, 4, "POGOProtos.Networking.Responses.ClaimCodenameResponse.Status"
+    optional :updated_player, :message, 5, "POGOProtos.Data.PlayerData"
   end
   add_enum "POGOProtos.Networking.Responses.ClaimCodenameResponse.Status" do
     value :UNSET, 0
@@ -426,6 +427,15 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     value :CODENAME_CHANGE_NOT_ALLOWED, 5
   end
   add_message "POGOProtos.Networking.Responses.AddFortModifierResponse" do
+    optional :result, :enum, 1, "POGOProtos.Networking.Responses.AddFortModifierResponse.Result"
+    optional :fort_details, :message, 2, "POGOProtos.Networking.Responses.FortDetailsResponse"
+  end
+  add_enum "POGOProtos.Networking.Responses.AddFortModifierResponse.Result" do
+    value :NO_RESULT_SET, 0
+    value :SUCCESS, 1
+    value :FORT_ALREADY_HAS_MODIFIER, 2
+    value :TOO_FAR_AWAY, 3
+    value :NO_ITEM_IN_INVENTORY, 4
   end
   add_message "POGOProtos.Networking.Responses.CatchPokemonResponse" do
     optional :status, :enum, 1, "POGOProtos.Networking.Responses.CatchPokemonResponse.CatchStatus"
@@ -628,6 +638,7 @@ module POGOProtos
       ClaimCodenameResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.ClaimCodenameResponse").msgclass
       ClaimCodenameResponse::Status = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.ClaimCodenameResponse.Status").enummodule
       AddFortModifierResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.AddFortModifierResponse").msgclass
+      AddFortModifierResponse::Result = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.AddFortModifierResponse.Result").enummodule
       CatchPokemonResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.CatchPokemonResponse").msgclass
       CatchPokemonResponse::CatchStatus = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.CatchPokemonResponse.CatchStatus").enummodule
       UseItemReviveResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("POGOProtos.Networking.Responses.UseItemReviveResponse").msgclass

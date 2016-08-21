@@ -18,12 +18,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :result, :enum, 1, "POGOProtos.Data.Logs.CatchPokemonLogEntry.Result"
     optional :pokemon_id, :enum, 2, "POGOProtos.Enums.PokemonId"
     optional :combat_points, :int32, 3
-    optional :pokemon_data_id, :uint64, 4
+    optional :pokemon_data_id, :fixed64, 4
   end
   add_enum "POGOProtos.Data.Logs.CatchPokemonLogEntry.Result" do
     value :UNSET, 0
     value :POKEMON_CAPTURED, 1
     value :POKEMON_FLED, 2
+    value :POKEMON_HATCHED, 3
   end
   add_message "POGOProtos.Data.Logs.FortSearchLogEntry" do
     optional :result, :enum, 1, "POGOProtos.Data.Logs.FortSearchLogEntry.Result"

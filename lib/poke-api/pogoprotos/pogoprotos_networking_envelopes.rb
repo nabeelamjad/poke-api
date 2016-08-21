@@ -14,15 +14,16 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :sensor_info, :message, 7, "POGOProtos.Networking.Envelopes.Signature.SensorInfo"
     optional :device_info, :message, 8, "POGOProtos.Networking.Envelopes.Signature.DeviceInfo"
     optional :activity_status, :message, 9, "POGOProtos.Networking.Envelopes.Signature.ActivityStatus"
-    optional :location_hash1, :uint32, 10
-    optional :location_hash2, :uint32, 20
-    optional :unknown22, :bytes, 22
+    optional :location_hash1, :uint64, 10
+    optional :location_hash2, :uint64, 20
+    optional :session_hash, :bytes, 22
     optional :timestamp, :uint64, 23
     repeated :request_hash, :uint64, 24
+    optional :unknown25, :int64, 25
   end
   add_message "POGOProtos.Networking.Envelopes.Signature.LocationFix" do
     optional :provider, :string, 1
-    optional :timestamp_since_start, :uint64, 2
+    optional :timestamp_snapshot, :uint64, 2
     optional :latitude, :float, 13
     optional :longitude, :float, 14
     optional :horizontal_accuracy, :float, 20

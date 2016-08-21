@@ -10,7 +10,7 @@ files.each do |file|
   fopen = File.open(file)
 
   new_body = fopen.each_line.map do |x|
-    if x =~ /require_relative_*pogo/
+    if x =~ /require_relative 'pog/i
       x = x.sub('require', 'require_relative').downcase.tr('.', '_')
     end
     x

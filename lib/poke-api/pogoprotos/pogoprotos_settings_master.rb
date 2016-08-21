@@ -70,6 +70,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :dodge_duration_ms, :int32, 12
     optional :minimum_player_level, :int32, 13
     optional :swap_duration_ms, :int32, 14
+    optional :dodge_damage_reduction_percent, :float, 15
   end
   add_message "POGOProtos.Settings.Master.MoveSettings" do
     optional :movement_id, :enum, 1, "POGOProtos.Enums.PokemonMove"
